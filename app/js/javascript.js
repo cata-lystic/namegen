@@ -10,6 +10,7 @@ wordDefaults = {
   words3: "",
 
   fontColor: "#000000",
+  fontSize: "68", /* currently in 'px' units */
   shadowH: "3",
   shadowV: "3",
   shadowBlur: "5",
@@ -29,6 +30,7 @@ wordDefaults = {
     // Reset colors
     if (choice == "colors" || choice == "all") {
       localStorage.fontColor = this.fontColor
+      localStorage.fontSize = this.fontSize
       localStorage.shadowH = this.shadowH
       localStorage.shadowV = this.shadowV
       localStorage.shadowBlur = this.shadowBlur
@@ -49,6 +51,7 @@ wordDefaults = {
       $("#opShadowV").val(this.shadowV)
       $("#opShadowBlur").val(this.shadowBlur)
       $("#opFontColor").spectrum({color: this.fontColor})
+      $("#opFontSize").val(this.fontSize)
       $("#opShadowColor").spectrum({color: this.shadowColor})
     }
 
@@ -79,6 +82,7 @@ $("document").ready(function() {
   $("#opShadowBlur").val(localStorage.shadowBlur)
   $("#opFontColor").attr({"value": localStorage.fontColor})
   $("#opShadowColor").attr({"value": localStorage.shadowColor})
+  $("#opFontSize").val(localStorage.fontSize)
 
   // Give text a shadow if enabled and show inputs
   if (localStorage.shadowEnabled == "1") {
@@ -219,7 +223,7 @@ $(document).on("click", ".optionsButton", function(e) {
     $(document).off("mouseenter", "#options")
     $(document).off("click", "#center")
 
-    $("#options").fadeOut()
+    $("#options").css({"opacity" : "1.0"}).fadeOut()
 
   } else {
 
@@ -252,6 +256,15 @@ $(document).on("change", "#opFontColor", function(e) {
   var fontColor = $(this).val()
   $("#generatedName").css({"color": fontColor})
   localStorage.fontColor = fontColor
+
+})
+
+// Change font size
+$(document).on("change", "#opFontSize", function(e) {
+
+  var fontSize = $(this).val()
+  $("#generatedName").css({"font-size": fontSize+"px"})
+  localStorage.fontSize = fontSize
 
 })
 
@@ -290,12 +303,37 @@ $("#opTextShadows").on("change", "input", function(e) {
 
 })
 
+// Change background
+$(document).on("click", "#opBackgroundChange", function(e) {
+
+  var bg = $("#opBackgroundURL").val()
+
+  if (bg == "background.jpg" || bg == "") {
+
+    $("html").css({"background-image":"url(app/img/background.jpg)"})
+
+  } else {
+
+    $("html").css({"background-image":"url("+bg+")"})
+
+  }
+
+
+})
+
+// Reset background
+$(document).on("click", "#opBackgroundReset", function(e) {
+
+  $("html").css({"background-image":"url(app/img/background.jpg)"})
+  $("#opBackgroundURL").val("background.jpg")
+
+})
+
 // Reset options to default
 $(document).on("click", "#defaultOptions", function(e) {
 
   // Don't reset words at the moment since they're separate from options
   wordDefaults.set("colors")
-
 
 })
 
