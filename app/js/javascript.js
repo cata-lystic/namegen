@@ -17,11 +17,13 @@ wordDefaults = {
   shadowColor: "#4d4d4d",
   shadowEnabled: "1",
 
+  backgroundURL: "app/img/background.jpg",
+
   // Set localStorage back to defaults
   set: function(choice) {
 
     // Reset words
-    if (choice == "words" || choice == "all") {
+    if (choice == "words") {
       localStorage.words1 = this.words1
       localStorage.words2 = this.words2
       localStorage.words3 = this.words3
@@ -55,6 +57,14 @@ wordDefaults = {
       $("#opShadowColor").spectrum({color: this.shadowColor})
     }
 
+    if (choice == "bg" || choice == "all") {
+
+      localStorage.backgroundURL = this.backgroundURL
+      $("html").css({"background-image": "url("+this.backgroundURL+")"})
+      $("#opBackgroundURL").val(this.backgroundURL)
+
+    }
+
   }
 
 }
@@ -75,7 +85,12 @@ $("document").ready(function() {
     wordDefaults.set("colors")
   }
 
-  // Load selected or default colors and filli in the input boxes in Options
+  // Set the default background if it hasn't been set
+  if (!localStorage.backgroundURL) {
+    wordDefaults.set("bg")
+  }
+
+  // Load selected or default colors and fill in the input boxes in Options
   $("#generatedName").css({"color" : localStorage.fontColor})
   $("#opShadowH").val(localStorage.shadowH)
   $("#opShadowV").val(localStorage.shadowV)
@@ -83,6 +98,8 @@ $("document").ready(function() {
   $("#opFontColor").attr({"value": localStorage.fontColor})
   $("#opShadowColor").attr({"value": localStorage.shadowColor})
   $("#opFontSize").val(localStorage.fontSize)
+  $("html").css({"background-image" : "url("+localStorage.backgroundURL+")"})
+  $("#opBackgroundURL").val(localStorage.backgroundURL)
 
   // Give text a shadow if enabled and show inputs
   if (localStorage.shadowEnabled == "1") {
@@ -223,7 +240,7 @@ $(document).on("click", ".optionsButton", function(e) {
     $(document).off("mouseenter", "#options")
     $(document).off("click", "#center")
 
-    $("#options").css({"opacity" : "1.0"}).fadeOut()
+    $("#options").fadeOut()
 
   } else {
 
@@ -241,7 +258,7 @@ $(document).on("click", ".optionsButton", function(e) {
       }
     })
 
-    $("#options").fadeIn()
+    $("#options").css({"opacity" : "1.0"}).fadeIn()
 
   }
 
@@ -311,10 +328,12 @@ $(document).on("click", "#opBackgroundChange", function(e) {
   if (bg == "background.jpg" || bg == "") {
 
     $("html").css({"background-image":"url(app/img/background.jpg)"})
+    localStorage.backgroundURL = "app/img/background.jpg"
 
   } else {
 
     $("html").css({"background-image":"url("+bg+")"})
+    localStorage.backgroundURL = bg
 
   }
 
@@ -333,7 +352,7 @@ $(document).on("click", "#opBackgroundReset", function(e) {
 $(document).on("click", "#defaultOptions", function(e) {
 
   // Don't reset words at the moment since they're separate from options
-  wordDefaults.set("colors")
+  wordDefaults.set("all")
 
 })
 
