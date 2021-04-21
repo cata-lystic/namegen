@@ -1,4 +1,4 @@
-version = "1.1"
+version = "1.2"
 
 // Defaults class
 wordDefaults = {
@@ -10,17 +10,20 @@ wordDefaults = {
   words3: "",
 
   fontColor: "#000000",
+  fontSize: "68", /* currently in 'px' units */
   shadowH: "3",
   shadowV: "3",
   shadowBlur: "5",
   shadowColor: "#4d4d4d",
-  shadowEnabled: "0", // disabled by default
+  shadowEnabled: "1",
+
+  backgroundURL: "app/img/background.jpg",
 
   // Set localStorage back to defaults
   set: function(choice) {
 
     // Reset words
-    if (choice == "words" || choice == "all") {
+    if (choice == "words") {
       localStorage.words1 = this.words1
       localStorage.words2 = this.words2
       localStorage.words3 = this.words3
@@ -29,6 +32,7 @@ wordDefaults = {
     // Reset colors
     if (choice == "colors" || choice == "all") {
       localStorage.fontColor = this.fontColor
+      localStorage.fontSize = this.fontSize
       localStorage.shadowH = this.shadowH
       localStorage.shadowV = this.shadowV
       localStorage.shadowBlur = this.shadowBlur
@@ -38,14 +42,27 @@ wordDefaults = {
       $("#generatedName").css({"color" : this.fontColor})
       if (this.shadowEnabled == "1") {
         $("#generatedName").css({"text-shadow" : this.shadowH+"px "+this.shadowV+"px "+this.shadowBlur+"px "+this.shadowColor})
+        $("#opShadowEnabled").prop({"checked":"checked"})
+        $("#opTextShadowsInputs").slideDown()
       } else {
         $("#generatedName").css({"text-shadow" : ""})
+        $("#opShadowEnabled").prop({"checked":""})
+        $("#opTextShadowsInputs").slideUp()
       }
       $("#opShadowH").val(this.shadowH)
       $("#opShadowV").val(this.shadowV)
       $("#opShadowBlur").val(this.shadowBlur)
       $("#opFontColor").spectrum({color: this.fontColor})
+      $("#opFontSize").val(this.fontSize)
       $("#opShadowColor").spectrum({color: this.shadowColor})
+    }
+
+    if (choice == "bg" || choice == "all") {
+
+      localStorage.backgroundURL = this.backgroundURL
+      $("html").css({"background-image": "url("+this.backgroundURL+")"})
+      $("#opBackgroundURL").val(this.backgroundURL)
+
     }
 
   }
@@ -68,13 +85,26 @@ $("document").ready(function() {
     wordDefaults.set("colors")
   }
 
-  // Load selected or default colors
+  // Set the default background if it hasn't been set
+  if (!localStorage.backgroundURL) {
+    wordDefaults.set("bg")
+  }
+
+  // Load selected or default colors and fill in the input boxes in Options
   $("#generatedName").css({"color" : localStorage.fontColor})
+  $("#opShadowH").val(localStorage.shadowH)
+  $("#opShadowV").val(localStorage.shadowV)
+  $("#opShadowBlur").val(localStorage.shadowBlur)
+  $("#opFontColor").attr({"value": localStorage.fontColor})
+  $("#opShadowColor").attr({"value": localStorage.shadowColor})
+  $("#opFontSize").val(localStorage.fontSize)
+  $("html").css({"background-image" : "url("+localStorage.backgroundURL+")"})
+  $("#opBackgroundURL").val(localStorage.backgroundURL)
 
   // Give text a shadow if enabled and show inputs
   if (localStorage.shadowEnabled == "1") {
     $("#generatedName").css({"text-shadow" : localStorage.shadowH+"px "+localStorage.shadowV+"px "+localStorage.shadowBlur+"px "+localStorage.shadowColor})
-
+    $("#opShadowEnabled").prop({"checked":"checked"})
     $("#opTextShadowsInputs").show()
   }
 
@@ -228,7 +258,7 @@ $(document).on("click", ".optionsButton", function(e) {
       }
     })
 
-    $("#options").fadeIn()
+    $("#options").css({"opacity" : "1.0"}).fadeIn()
 
   }
 
@@ -243,6 +273,15 @@ $(document).on("change", "#opFontColor", function(e) {
   var fontColor = $(this).val()
   $("#generatedName").css({"color": fontColor})
   localStorage.fontColor = fontColor
+
+})
+
+// Change font size
+$(document).on("change", "#opFontSize", function(e) {
+
+  var fontSize = $(this).val()
+  $("#generatedName").css({"font-size": fontSize+"px"})
+  localStorage.fontSize = fontSize
 
 })
 
@@ -281,15 +320,39 @@ $("#opTextShadows").on("change", "input", function(e) {
 
 })
 
+// Change background
+$(document).on("click", "#opBackgroundChange", function(e) {
+
+  var bg = $("#opBackgroundURL").val()
+
+  if (bg == "background.jpg" || bg == "") {
+
+    $("html").css({"background-image":"url(app/img/background.jpg)"})
+    localStorage.backgroundURL = "app/img/background.jpg"
+
+  } else {
+
+    $("html").css({"background-image":"url("+bg+")"})
+    localStorage.backgroundURL = bg
+
+  }
+
+
+})
+
+// Reset background
+$(document).on("click", "#opBackgroundReset", function(e) {
+
+  $("html").css({"background-image":"url(app/img/background.jpg)"})
+  $("#opBackgroundURL").val("background.jpg")
+
+})
+
 // Reset options to default
 $(document).on("click", "#defaultOptions", function(e) {
 
   // Don't reset words at the moment since they're separate from options
-  wordDefaults.set("colors")
-
-  // Uncheck the Shadow Enabled box and hide the Shadow options
-  $("#opShadowEnabled").prop({"checked" : "" })
-  $("#opTextShadowsInputs").slideUp()
+  wordDefaults.set("all")
 
 })
 

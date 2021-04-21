@@ -41,18 +41,26 @@
 
     <div id="options" style="display: none">
 
-      <div id="optionsClose" class="optionsButton" title="Close Options">X</div>
+      <div id="optionsContainer">
 
-      <h1>Options</h1>
+        <div id="optionsClose" class="optionsButton" title="Close Options">X</div>
 
-      <p>Font Color: <input id="opFontColor" type="text" class="spectrum" /></p>
+        <h1>Options</h1>
 
-      <p>Text Shadow: <label for="opShadowEnabled"><input id="opShadowEnabled" type="checkbox" value="1" /> Enabled</label></p>
-      <div id="opTextShadows">
-        <p id="opTextShadowsInputs" style="display: none">Horizontal: <input id="opShadowH" type="number" value="3" /> Vertical: <input id="opShadowV" type="number" value="3" /> Blue: <input id="opShadowBlur" type="number" value="5" /> Color: <input id="opShadowColor" class="spectrum" type="text" value="#4d4d4d" style="width: 80px" /></p>
+        <p>Font Size: <input id="opFontSize" type="number" value="68" step="1" style="width: 45px" class="" />px</p>
+
+        <p>Font Color: <input id="opFontColor" type="text" class="spectrum" /></p>
+
+        <p>Text Shadow: <label for="opShadowEnabled"><input id="opShadowEnabled" type="checkbox" value="1" /> Enabled</label></p>
+        <div id="opTextShadows">
+          <p id="opTextShadowsInputs" style="display: none">^ Horizontal: <input id="opShadowH" type="number" value="3" /> Vertical: <input id="opShadowV" type="number" value="3" /> Blur: <input id="opShadowBlur" type="number" value="5" /> Color: <input id="opShadowColor" class="spectrum" type="text" value="#4d4d4d" /></p>
+        </div>
+
+        <p>Background URL: <input type="text" id="opBackgroundURL" value="background.jpg" style="width: 40%" /> <input type="button" id="opBackgroundChange" value="Change" /> <input type="button" id="opBackgroundReset" value="Reset" /></p>
+
+        <p><input id="defaultOptions" type="button" value="Reset to Defaults" /> <input id="clearData" type="button" value="Clear Data" /></p>
+
       </div>
-
-      <p><input id="defaultOptions" type="button" value="Reset to Defaults" /> <input id="clearData" type="button" value="Clear Data" /></p>
 
     </div>
 
