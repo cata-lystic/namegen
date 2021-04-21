@@ -10,7 +10,45 @@ body, html {
 #center {
   margin: auto;
 text-align: center;
+width: 100%;
+
 }
+
+#options {
+  width: 90%;
+  position: absolute;
+  z-index: 99;
+  top: 10%;
+  left: 5%;
+  margin: auto;
+  padding: 0 2%;
+  background: rgba(123, 141, 150, 0.8);
+  border-radius: 10px;
+  color: #eeeeee;
+  transition: opacity 0.8s; 
+}
+
+/* Larger screens get smaller options box */
+@media only screen and (min-width: 1024px) {
+  #options {
+      width: 60%;
+      left: 20%;
+  }
+}
+
+#optionsClose {
+  float: right;
+  margin-top: 1%;
+  margin-right: 0;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+#opTextShadows input[type='number'] {
+  width: 40px;
+  padding: 5px 5px !important;
+}
+
 
 #generatedName {
     font-size: 5rem;
@@ -20,7 +58,7 @@ text-align: center;
 /* Larger screens get larger font */
 @media only screen and (min-width: 1024px) { #generatedName { font-size: 6rem; } }
 
-#generate, input.editButtons {
+#generate, input.editButtons, #defaultOptions, #clearData {
   margin-top: 30px;
   font-size: 2rem;
   border-radius: 8px;
@@ -39,7 +77,7 @@ text-align: center;
   color: #212121;
 }
 
-#editFooter input {
+#editFooter input, #defaultOptions, #clearData {
   font-size: 1.2rem;
 }
 
@@ -55,9 +93,15 @@ text-align: center;
   color: #eeeeee;
 }
 
-a {
-  color: #f4d84a;
+#footer a {
+  color: #ffffff;
+  text-decoration: none;
 }
+
+#footer a:hover {
+  text-decoration: underline;
+}
+
 
 textarea {
   border-radius: 5px;
