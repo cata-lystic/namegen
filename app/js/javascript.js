@@ -9,12 +9,44 @@ wordDefaults = {
   words2: "Warthog Hedgehog Badger Drake Eft Fawn Gibbon Heron Ibex Jackalope Koala Lynx Meerkat Narwhal Ocelot Pangolin Quetzal Ringtail Salamander Tahr Unicorn Vervet Werewolf Xerus Yak Zupus Aardvark Beaver Cuttlefish Dingo Ermine Fossa Gorilla Hippo",
   words3: "",
 
-  // Set localStorage back to defaults
-  set: function() {
+  fontColor: "#000000",
+  shadowH: "3",
+  shadowV: "3",
+  shadowBlur: "5",
+  shadowColor: "#4d4d4d",
+  shadowEnabled: "0", // disabled by default
 
-    localStorage.words1 = this.words1
-    localStorage.words2 = this.words2
-    localStorage.words3 = this.words3
+  // Set localStorage back to defaults
+  set: function(choice) {
+
+    // Reset words
+    if (choice == "words" || choice == "all") {
+      localStorage.words1 = this.words1
+      localStorage.words2 = this.words2
+      localStorage.words3 = this.words3
+    }
+
+    // Reset colors
+    if (choice == "colors" || choice == "all") {
+      localStorage.fontColor = this.fontColor
+      localStorage.shadowH = this.shadowH
+      localStorage.shadowV = this.shadowV
+      localStorage.shadowBlur = this.shadowBlur
+      localStorage.shadowColor = this.shadowColor
+      localStorage.shadowEnabled = this.shadowEnabled
+
+      $("#generatedName").css({"color" : this.fontColor})
+      if (this.shadowEnabled == "1") {
+        $("#generatedName").css({"text-shadow" : this.shadowH+"px "+this.shadowV+"px "+this.shadowBlur+"px "+this.shadowColor})
+      } else {
+        $("#generatedName").css({"text-shadow" : ""})
+      }
+      $("#opShadowH").val(this.shadowH)
+      $("#opShadowV").val(this.shadowV)
+      $("#opShadowBlur").val(this.shadowBlur)
+      $("#opFontColor").spectrum({color: this.fontColor})
+      $("#opShadowColor").spectrum({color: this.shadowColor})
+    }
 
   }
 
@@ -23,26 +55,39 @@ wordDefaults = {
 // Do this on startup
 $("document").ready(function() {
 
-  // Set the defaults if they haven't been set
-  if (!localStorage.words1) wordDefaults.set()
+  // Set the default words if they haven't been set
+  if (!localStorage.words1) wordDefaults.set("words")
 
   // Load the defaults into the edit boxes
   $("#edit1").val(localStorage.words1)
   $("#edit2").val(localStorage.words2)
   $("#edit3").val(localStorage.words3)
 
+  // Set the default colors if they haven't been setting
+  if (!localStorage.shadowH) {
+    wordDefaults.set("colors")
+  }
+
+  // Load selected or default colors
+  $("#generatedName").css({"color" : localStorage.fontColor})
+
+  // Give text a shadow if enabled and show inputs
+  if (localStorage.shadowEnabled == "1") {
+    $("#generatedName").css({"text-shadow" : localStorage.shadowH+"px "+localStorage.shadowV+"px "+localStorage.shadowBlur+"px "+localStorage.shadowColor})
+
+    $("#opTextShadowsInputs").show()
+  }
+
+  // Generate a word to begin with
   generate()
 
   // Place the Namegen version on the footer
   $("#namegenVersion").text(version)
 
-  // Create the Colorpicker in options
+  // Create the Colorpickers in options
   $(".spectrum").spectrum({
-    color: "#000000",
     preferredFormat: "hex",
     showInput: true
-    //showPalette: true,
-    //palette: [["red", "rgba(0, 255, 0, .5)", "rgb(0, 0, 255)"]]
   });
 
 })
@@ -166,8 +211,8 @@ $(document).on("click", ".optionsButton", function(e) {
 $(document).on("change", "#opFontColor", function(e) {
 
   var fontColor = $(this).val()
-  console.log(fontColor)
   $("#generatedName").css({"color": fontColor})
+  localStorage.fontColor = fontColor
 
 })
 
@@ -178,26 +223,60 @@ $(document).on("click", "#opShadowEnabled", function(e) {
   if ( $(this).prop("checked") == true ) {
     $("#opTextShadows input").trigger("change") // "Change" an input so it loads the default text shadow
     $("#opTextShadowsInputs").slideDown()
+    localStorage.shadowEnabled = "1"
   } else {
     $("#generatedName").css({"text-shadow": ""})
     $("#opTextShadowsInputs").slideUp()
+    localStorage.shadowEnabled = "0"
   }
 
 })
 
 // Change text shadow
 $("#opTextShadows").on("change", "input", function(e) {
-  console.log("AHH")
-  // Grab the selected inputs
-  var hShadow = $("#opShadowH").val()
-  var vShadow = $("#opShadowV").val()
+
+  // Grab the selected inputs. Check to make sure they're numbers later ;)
+  var shadowH = $("#opShadowH").val()
+  var shadowV = $("#opShadowV").val()
   var blur = $("#opShadowBlur").val()
   var color = $("#opShadowColor").val()
 
-  $("#generatedName").css({"text-shadow" : hShadow+"px "+vShadow+"px "+blur+"px "+color})
+  $("#generatedName").css({"text-shadow" : shadowH+"px "+shadowV+"px "+blur+"px "+color})
 
+  // Save settings
+  localStorage.shadowH = shadowH
+  localStorage.shadowV = shadowV
+  localStorage.shadowBlur = blur
+  localStorage.shadowColor = color
 
 })
+
+// Reset options to default
+$(document).on("click", "#defaultOptions", function(e) {
+
+  // Don't reset words at the moment since they're separate from options
+  wordDefaults.set("colors")
+
+  // Uncheck the Shadow Enabled box and hide the Shadow options
+  $("#opShadowEnabled").prop({"checked" : "" })
+  $("#opTextShadowsInputs").slideUp()
+
+})
+
+// Clear all localStorage data and reload the page
+$(document).on("click", "#clearData", function(e) {
+
+  var askFirst = confirm("Would you like to clear all data, including words?")
+
+  if (askFirst == true) {
+
+    localStorage.clear()
+    window.location = window.location
+
+  }
+
+})
+
 
 
 // Generate new word on spacebar click

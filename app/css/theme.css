@@ -55,7 +55,7 @@ text-align: center;
 /* Larger screens get larger font */
 @media only screen and (min-width: 1024px) { #generatedName { font-size: 6rem; } }
 
-#generate, input.editButtons {
+#generate, input.editButtons, #defaultOptions, #clearData {
   margin-top: 30px;
   font-size: 2rem;
   border-radius: 8px;
@@ -74,7 +74,7 @@ text-align: center;
   color: #212121;
 }
 
-#editFooter input {
+#editFooter input, #defaultOptions, #clearData {
   font-size: 1.2rem;
 }
 
