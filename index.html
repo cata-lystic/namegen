@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Generate a name using your own words. If that makes sense.">
+    <meta name="author" content="Cata Lystic">
+
+    <title>Namegen</title>
+
+    <!-- Favicons. Thanks to https://faviconit.com -->
+    <link rel="icon" href="app/img/favicons/favicon.ico">
+    <link rel="shortcut icon" href="app/img/favicons/favicon.ico">
+  	<link rel="icon" sizes="16x16 32x32 64x64" href="app/img/favicons/favicon.ico">
+  	<link rel="icon" type="image/png" sizes="196x196" href="app/img/favicons/favicon-192.png">
+  	<link rel="icon" type="image/png" sizes="160x160" href="app/img/favicons/favicon-160.png">
+  	<link rel="icon" type="image/png" sizes="96x96" href="app/img/favicons/favicon-96.png">
+  	<link rel="icon" type="image/png" sizes="64x64" href="app/img/favicons/favicon-64.png">
+  	<link rel="icon" type="image/png" sizes="32x32" href="app/img/favicons/favicon-32.png">
+  	<link rel="icon" type="image/png" sizes="16x16" href="app/img/favicons/favicon-16.png">
+  	<link rel="apple-touch-icon" href="app/img/favicons/favicon-57.png">
+  	<link rel="apple-touch-icon" sizes="114x114" href="app/img/favicons/favicon-114.png">
+  	<link rel="apple-touch-icon" sizes="72x72" href="app/img/favicons/favicon-72.png">
+  	<link rel="apple-touch-icon" sizes="144x144" href="app/img/favicons/favicon-144.png">
+  	<link rel="apple-touch-icon" sizes="60x60" href="app/img/favicons/favicon-60.png">
+  	<link rel="apple-touch-icon" sizes="120x120" href="app/img/favicons/favicon-120.png">
+  	<link rel="apple-touch-icon" sizes="76x76" href="app/img/favicons/favicon-76.png">
+  	<link rel="apple-touch-icon" sizes="152x152" href="app/img/favicons/favicon-152.png">
+  	<link rel="apple-touch-icon" sizes="180x180" href="app/img/favicons/favicon-180.png">
+  	<meta name="msapplication-TileColor" content="#FFFFFF">
+  	<meta name="msapplication-TileImage" content="app/img/favicons/favicon-144.png">
+  	<meta name="msapplication-config" content="/browserconfig.xml">
+
+    <!-- CSS -->
+    <link id="theme" href="app/css/theme.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <div id="center">
+
+      <!-- Main box. Shows generated name -->
+      <span id="generatedName"></span>
+
+      <!-- Edit section -->
+      <div id="editSection" style="display: none">
+
+        <p>Separate each word by a space.</p>
+
+        <textarea id="edit1" rows="6" cols="30"></textarea>
+        <textarea id="edit2" rows="6" cols="30"></textarea>
+        <textarea id="edit3" rows="6" cols="30"></textarea>
+
+      </div>
+
+      <!-- Generate and Edit buttons -->
+      <p class="text-center"><input type="button" id="generate" value="Generate" /><input type="button" id="save" value="Save" class="editButtons" style="display: none" /> <input type="button" id="cancel" value="Cancel" class="editButtons" style="display: none" /> <input type="button" id="clear" value="Clear" class="editButtons" style="display: none" /> <input type="button" id="reset" value="Reset" class="editButtons" style="display: none" /></p>
+
+    </div>
+
+    <!-- The Edit button is on the bottom left -->
+    <div id="editFooter">
+      <input type="button" id="edit" class="editButtons" value="Edit" />
+    </div>
+
+    <!-- The main footer is on the bottom right -->
+    <div id="footer">
+      Namegen
+    </div>
+
+    <!-- Javascript -->
+    <script src="app/js/jquery-3.6.0.min.js"></script>
+    <script src="app/js/javascript.js"></script>
+
+  </body>
+</html>

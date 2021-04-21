@@ -1,0 +1,66 @@
+body, html {
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  display: grid;
+  background-image: url("../img/background.jpg");
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+}
+
+#center {
+  margin: auto;
+text-align: center;
+}
+
+#generatedName {
+    font-size: 5rem;
+    text-align: center;
+}
+
+/* Larger screens get larger font */
+@media only screen and (min-width: 1024px) { #generatedName { font-size: 6rem; } }
+
+#generate, input.editButtons {
+  margin-top: 30px;
+  font-size: 2rem;
+  border-radius: 8px;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  cursor: pointer;
+}
+
+#editFooter {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-size: 1rem;
+  border-radius: 10px;
+  width: auto;
+  padding: 5px 10px;
+  color: #212121;
+}
+
+#editFooter input {
+  font-size: 1.2rem;
+}
+
+#footer {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 1.2rem;
+  background: rgba(123, 141, 150, 0.6);
+  border-radius: 10px;
+  width: auto;
+  padding: 5px 10px;
+  color: #eeeeee;
+}
+
+a {
+  color: #f4d84a;
+}
+
+textarea {
+  border-radius: 5px;
+  padding: 5px;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+}
