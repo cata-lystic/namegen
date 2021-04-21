@@ -36,6 +36,15 @@ $("document").ready(function() {
   // Place the Namegen version on the footer
   $("#namegenVersion").text(version)
 
+  // Create the Colorpicker in options
+  $(".spectrum").spectrum({
+    color: "#000000",
+    preferredFormat: "hex",
+    showInput: true
+    //showPalette: true,
+    //palette: [["red", "rgba(0, 255, 0, .5)", "rgb(0, 0, 255)"]]
+  });
+
 })
 
 
@@ -142,6 +151,54 @@ $(document).on("click", "#reset", function(e) {
   $("#edit3").val(wordDefaults.words3)
 
 })
+
+
+/* OPTIONS */
+
+// Toggle Options dialog box
+$(document).on("click", ".optionsButton", function(e) {
+
+  $("#options").fadeToggle()
+
+})
+
+// Change font color
+$(document).on("change", "#opFontColor", function(e) {
+
+  var fontColor = $(this).val()
+  console.log(fontColor)
+  $("#generatedName").css({"color": fontColor})
+
+})
+
+// Toggle Text Shadow options when enabled/disabled
+$(document).on("click", "#opShadowEnabled", function(e) {
+
+  // Check if shadows were enabled or disabled
+  if ( $(this).prop("checked") == true ) {
+    $("#opTextShadows input").trigger("change") // "Change" an input so it loads the default text shadow
+    $("#opTextShadowsInputs").slideDown()
+  } else {
+    $("#generatedName").css({"text-shadow": ""})
+    $("#opTextShadowsInputs").slideUp()
+  }
+
+})
+
+// Change text shadow
+$("#opTextShadows").on("change", "input", function(e) {
+  console.log("AHH")
+  // Grab the selected inputs
+  var hShadow = $("#opShadowH").val()
+  var vShadow = $("#opShadowV").val()
+  var blur = $("#opShadowBlur").val()
+  var color = $("#opShadowColor").val()
+
+  $("#generatedName").css({"text-shadow" : hShadow+"px "+vShadow+"px "+blur+"px "+color})
+
+
+})
+
 
 // Generate new word on spacebar click
 window.addEventListener('keydown', function(e) {
