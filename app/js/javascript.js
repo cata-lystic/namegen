@@ -1,4 +1,4 @@
-version = "1.1"
+version = "1.2"
 
 // Defaults class
 wordDefaults = {
@@ -14,7 +14,7 @@ wordDefaults = {
   shadowV: "3",
   shadowBlur: "5",
   shadowColor: "#4d4d4d",
-  shadowEnabled: "0", // disabled by default
+  shadowEnabled: "1",
 
   // Set localStorage back to defaults
   set: function(choice) {
@@ -38,8 +38,12 @@ wordDefaults = {
       $("#generatedName").css({"color" : this.fontColor})
       if (this.shadowEnabled == "1") {
         $("#generatedName").css({"text-shadow" : this.shadowH+"px "+this.shadowV+"px "+this.shadowBlur+"px "+this.shadowColor})
+        $("#opShadowEnabled").prop({"checked":"checked"})
+        $("#opTextShadowsInputs").slideDown()
       } else {
         $("#generatedName").css({"text-shadow" : ""})
+        $("#opShadowEnabled").prop({"checked":""})
+        $("#opTextShadowsInputs").slideUp()
       }
       $("#opShadowH").val(this.shadowH)
       $("#opShadowV").val(this.shadowV)
@@ -68,13 +72,18 @@ $("document").ready(function() {
     wordDefaults.set("colors")
   }
 
-  // Load selected or default colors
+  // Load selected or default colors and filli in the input boxes in Options
   $("#generatedName").css({"color" : localStorage.fontColor})
+  $("#opShadowH").val(localStorage.shadowH)
+  $("#opShadowV").val(localStorage.shadowV)
+  $("#opShadowBlur").val(localStorage.shadowBlur)
+  $("#opFontColor").attr({"value": localStorage.fontColor})
+  $("#opShadowColor").attr({"value": localStorage.shadowColor})
 
   // Give text a shadow if enabled and show inputs
   if (localStorage.shadowEnabled == "1") {
     $("#generatedName").css({"text-shadow" : localStorage.shadowH+"px "+localStorage.shadowV+"px "+localStorage.shadowBlur+"px "+localStorage.shadowColor})
-
+    $("#opShadowEnabled").prop({"checked":"checked"})
     $("#opTextShadowsInputs").show()
   }
 
@@ -287,9 +296,6 @@ $(document).on("click", "#defaultOptions", function(e) {
   // Don't reset words at the moment since they're separate from options
   wordDefaults.set("colors")
 
-  // Uncheck the Shadow Enabled box and hide the Shadow options
-  $("#opShadowEnabled").prop({"checked" : "" })
-  $("#opTextShadowsInputs").slideUp()
 
 })
 
