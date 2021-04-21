@@ -1,4 +1,4 @@
-version = 1.0
+version = "1.1"
 
 // Defaults class
 wordDefaults = {
@@ -32,6 +32,9 @@ $("document").ready(function() {
   $("#edit3").val(localStorage.words3)
 
   generate()
+
+  // Place the Namegen version on the footer
+  $("#namegenVersion").text(version)
 
 })
 
@@ -80,9 +83,20 @@ $(document).on("click", "#edit", function(e) {
 $(document).on("click", "#save", function(e) {
 
   // This is a quick app so it won't do much checking to see if the textarea boxes are valid. It's just going to save the whole value directly to the localStorage
-  localStorage.words1 = $("#edit1").val()
-  localStorage.words2 = $("#edit2").val()
-  localStorage.words3 = $("#edit3").val()
+  var words1 = $("#edit1").val()
+  var words2 = $("#edit2").val()
+  var words3 = $("#edit3").val()
+
+  // If all three are blank, cancel instead
+  if (words1 == "" && words2 == "" && words3 =="") {
+    $("#cancel").trigger("click")
+    return false
+  }
+
+  // Save settings
+  localStorage.words1 = words1
+  localStorage.words2 = words2
+  localStorage.words3 = words3
 
   // Hide the edit area and bring back the home screen
   $("#editSection").slideUp()
@@ -128,3 +142,12 @@ $(document).on("click", "#reset", function(e) {
   $("#edit3").val(wordDefaults.words3)
 
 })
+
+// Generate new word on spacebar click
+window.addEventListener('keydown', function(e) {
+  if(e.keyCode == 32 && e.target == document.body && $("#generatedName").is(":visible")) {
+    $("#generate").trigger("click")
+    e.preventDefault();
+    //console.log(e)
+  }
+});

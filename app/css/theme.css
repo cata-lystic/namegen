@@ -55,9 +55,15 @@ text-align: center;
   color: #eeeeee;
 }
 
-a {
-  color: #f4d84a;
+#footer a {
+  color: #ffffff;
+  text-decoration: none;
 }
+
+#footer a:hover {
+  text-decoration: underline;
+}
+
 
 textarea {
   border-radius: 5px;
