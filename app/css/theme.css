@@ -10,6 +10,8 @@ body, html {
 #center {
   margin: auto;
 text-align: center;
+width: 100%;
+
 }
 
 #options {
@@ -23,6 +25,7 @@ text-align: center;
   background: rgba(123, 141, 150, 0.8);
   border-radius: 10px;
   color: #eeeeee;
+  transition: opacity 0.8s; 
 }
 
 /* Larger screens get smaller options box */

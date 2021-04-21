@@ -156,7 +156,7 @@ $(document).on("click", "#save", function(e) {
   $("#editSection").slideUp()
   $("#generatedName,#footer").slideDown()
   $("input.editButtons").hide()
-  $("#generate, #edit").show()
+  $("#generate, #edit, #optionsButton").show()
 
   // Generate a new word using the new lists
   generate()
@@ -175,7 +175,7 @@ $(document).on("click", "#cancel", function(e) {
   $("#editSection").slideUp()
   $("#generatedName,#footer").slideDown()
   $("input.editButtons").hide()
-  $("#generate, #edit").show()
+  $("#generate, #edit, #optionsButton").show()
 
 })
 
@@ -203,9 +203,39 @@ $(document).on("click", "#reset", function(e) {
 // Toggle Options dialog box
 $(document).on("click", ".optionsButton", function(e) {
 
-  $("#options").fadeToggle()
+  // Check if Options box is already open
+  if ( $("#options").is(":visible") ) {
+
+    // Disable any events from when it was turned on
+    $(document).off("mouseenter", "#options")
+    $(document).off("click", "#center")
+
+    $("#options").fadeOut()
+
+  } else {
+
+    // Create an event that changes the opacity of the Options dialog as you hover over it so you can preview your font changes
+    $(document).on('mouseenter', '#options',  function(){
+      $("#options").css({"opacity" : "1.0"})
+    }).on('mouseleave', '#options', function() {
+      $("#options").css({"opacity" : "0.3"})
+    });
+
+    // Create an event that closes the Options box when you click out of it
+    $(document).on('click', '#center',  function(){
+      if ($(this).attr("id") != "options") {
+        $("#optionsButton").trigger("click")
+      }
+    })
+
+    $("#options").fadeIn()
+
+  }
+
 
 })
+
+
 
 // Change font color
 $(document).on("change", "#opFontColor", function(e) {
