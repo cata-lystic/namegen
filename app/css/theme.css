@@ -7,7 +7,6 @@ body, html {
   max-height: 100%;
   overflow: hidden;
   display: grid;
-
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
 }
 
@@ -22,7 +21,7 @@ width: 100%;
   width: 90%;
   position: absolute;
   z-index: 99;
-  top: 10%;
+  top: 5%;
   left: 5%;
   background: rgba(123, 141, 150, 0.9);
   border-radius: 10px;
@@ -35,6 +34,15 @@ width: 100%;
   #options {
       width: 60%;
       left: 20%;
+  }
+}
+
+/* Trying out smaller options box for desktop */
+@media only screen and (min-width: 1024px) {
+  #options {
+      width: 25%;
+      top: 3%;
+      left: 2%;
   }
 }
 
@@ -52,6 +60,10 @@ width: 100%;
 
 #ssClose {
   right: 5%;
+}
+
+#optionsClose {
+  padding-right: 2%;
 }
 
 input[type='number'] {
@@ -111,14 +123,16 @@ canvas {
 #generatedName {
     font-size: 68px;
     text-align: center;
+    display: inline-block;
 }
+
 
 /* Smalelr  screens never get screenshots box button */
 @media only screen and (max-width: 1024px) {
   #screenshotsButton {
     display: none !important;
   }
-  #takeScreenshot {
+  #takeScreenshotMain {
     display: none !important;
   }
 }
@@ -149,9 +163,9 @@ canvas {
 /*
 @media only screen and (min-width: 1024px) { #generatedName { font-size: 6rem; } } */
 
-#generate, input.editButtons, #defaultOptions, #clearData, #takeScreenshot {
+.generate, input.editButtons, #defaultOptions, #clearData, #takeScreenshotMain, #takeScreenshotFooter, #helpScreenshotOK {
   margin-top: 30px;
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
   cursor: pointer;
   background: rgba(0, 0, 0, 0.3);
@@ -162,15 +176,26 @@ canvas {
   color: #eeeeee;
 }
 
-#takeScreenshot img {
-  max-height: 25px;
+#helpScreenshotOK {
+  font-size: 1.5rem;
+}
+
+#takeScreenshotMain img {
+  max-height: 22px;
+}
+
+#takeScreenshotFooter {
+  font-size: 1.2rem !important;
+}
+#takeScreenshotFooter img {
+  max-height: 14px;
 }
 
 #takeScreenshotMobile {
   cursor: pointer;
 }
 
-#generate:hover, input.editButtons:hover, #defaultOptions:hover, #clearData:hover, #takeScreenshot:hover {
+.generate:hover, input.editButtons:hover, #defaultOptions:hover, #clearData:hover, helpScreenshotOK:hover {
   background: rgba(0, 0, 0, 0.5);
 }
 
@@ -180,6 +205,36 @@ canvas {
 
 #defaultOptions:hover, #clearData:hover {
   background: rgba(0, 0, 0, 0.5);
+}
+
+
+input.lightTheme, #takeScreenshotMain.lightTheme, #takeScreenshotFooter.lightTheme, #screenshots.lightTheme, #footer.lightTheme {
+  background: rgba(255, 255, 255, 0.6);
+  color: #000000 !important;
+
+}
+input.lightTheme:hover, #takeScreenshot.lightTheme:hover, #takeScreenshotFooter.lightTheme:hover, #screenshots.lightTheme:hover, #footer.lightTheme:hover {
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+.lightTheme {
+  color: #ffffff;
+}
+.lightTheme a {
+  color: #000000 !important;
+}
+
+#notification {
+  width: 100%;
+  left: 0;
+  top: 0;
+  border-bottom: 1px solid #000000;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+}
+
+#helpScreenshotNotif {
+  padding: 2%;
 }
 
 #editFooter {

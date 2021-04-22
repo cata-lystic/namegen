@@ -1,4 +1,4 @@
-version = "1.3"
+version = "1.4"
 
 // Defaults class
 wordDefaults = {
@@ -17,8 +17,18 @@ wordDefaults = {
   shadowColor: "#4d4d4d",
   shadowEnabled: "1",
 
-  backgroundURL: "app/img/background.jpg",
+  backgroundURL: "app/img/background.jpg", // Can be external URL
+  buttonTheme: "Dark", // Dark or Light
+  buttonSmall: 0, // 1 = Small buttons, 0 = Normal buttons
   screenshotTime: 5, // 5 seconds
+  rotation: 0, // 0 degrees. Same for everything below
+  rotateX: 0,
+  rotateY:  0,
+  rotateZ:  0,
+  skewX:  0,
+  skewY:  0,
+  posX:  0,
+  posY:  0,
 
   // Set localStorage back to defaults
   set: function(choice) {
@@ -69,6 +79,23 @@ wordDefaults = {
     if (choice == "all") {
       localStorage.screenshotTime = this.screenshotTime
       $("#opScreenshotTime").val(this.screenshotTime)
+      localStorage.buttonTheme = this.buttonTheme
+      $("input[value='"+this.buttonTheme+"']").prop({checked: true})
+    }
+
+    if (choice == "textTransform" || choice == "all") {
+      localStorage.rotateX = this.rotateX
+      localStorage.rotateY = this.rotateY
+      localStorage.rotateZ = this.rotateZ
+      localStorage.skewX = this.skewX
+      localStorage.skewY = this.skewY
+      localStorage.posX = this.posX
+      localStorage.posY = this.posY
+
+      // While these are all 0 just set all numbers to 0
+      $(".textTransform[type='number']").val(0)
+
+      $("#opRotateX").trigger("change")
     }
 
   }
@@ -98,8 +125,34 @@ $("document").ready(function() {
 
   // Set default Screenshot time if it hasn't been set (consolidating all these soon)
   if (!localStorage.screenshotTime) {
-    localStorage.screenshotTime = 5;
+    localStorage.screenshotTime = wordDefaults.screenshotTime;
   }
+
+  // Set default theme
+  if (!localStorage.buttonTheme) {
+    localStorage.buttonTheme = wordDefaults.buttonTheme
+  }
+  $("input[value='"+localStorage.buttonTheme+"']").prop({checked: true})
+  if (localStorage.buttonTheme == "Light") {
+    $("#opLight").trigger("click")
+  }
+
+  if (localStorage.buttonSmall == "1") {
+      $("#opButtonSmall").prop({checked:true})
+      smallButtons(1)
+  }
+
+  if (!localStorage.rotateX) {
+    wordDefaults.set("textTransform")
+  }
+  $("#opRotateX").val(localStorage.rotateX)
+  $("#opRotateY").val(localStorage.rotateY)
+  $("#opRotateZ").val(localStorage.rotateZ)
+  $("#opSkewX").val(localStorage.skewX)
+  $("#opSkewY").val(localStorage.skewY)
+  $("#opPosX").val(localStorage.posX)
+  $("#opPosY").val(localStorage.posY)
+  $("#opRotateX").trigger("change")
 
   // Load selected or default colors and fill in the input boxes in Options
   $("#generatedName").css({"color" : localStorage.fontColor})
@@ -112,6 +165,7 @@ $("document").ready(function() {
   $("html").css({"background-image" : "url("+localStorage.backgroundURL+")"})
   $("#opBackgroundURL").val(localStorage.backgroundURL)
   $("#opScreenshotTime").val(localStorage.screenshotTime)
+  $("#generatedName").css({"transform": "rotate("+localStorage.rotation+"deg)"})
 
   // Give text a shadow if enabled and show inputs
   if (localStorage.shadowEnabled == "1") {
@@ -119,6 +173,7 @@ $("document").ready(function() {
     $("#opShadowEnabled").prop({"checked":"checked"})
     $("#opTextShadowsInputs").show()
   }
+
 
   // Generate a word to begin with
   generate()
@@ -160,7 +215,7 @@ function generate() {
 }
 
 // Generate button
-$(document).on("click", "#generate", function(e) {
+$(document).on("click", ".generate", function(e) {
   generate()
 })
 
@@ -301,6 +356,28 @@ $(document).on("change", "#opFontSize", function(e) {
     localStorage.fontSize = fontSize
   }
 
+})
+
+// Change word rotation and skew
+$(document).on("change", ".textTransform", function(e) {
+
+  var rotateX = parseInt($("#opRotateX").val())
+  var rotateY = parseInt($("#opRotateY").val())
+  var rotateZ = parseInt($("#opRotateZ").val())
+  var skewX = parseInt($("#opSkewX").val())
+  var skewY = parseInt($("#opSkewY").val())
+  var posX = parseInt($("#opPosX").val())
+  var posY = parseInt($("#opPosY").val())
+
+  $("#generatedName").css({"transform": "rotateX("+rotateX+"deg) rotateY("+rotateY+"deg) rotateZ("+rotateZ+"deg) skew("+skewX+"deg, "+skewY+"deg) translateX("+posX+"px) translateY("+posY+"px)"})
+
+  localStorage.rotateX = rotateX
+  localStorage.rotateY = rotateY
+  localStorage.rotateZ = rotateZ
+  localStorage.skewX = skewX
+  localStorage.skewY = skewY
+  localStorage.posX = posX
+  localStorage.posY = posY
 
 })
 
@@ -380,6 +457,62 @@ $(document).on("click", "#opBackgroundReset", function(e) {
 
 })
 
+// Change button theme
+$(document).on("click", ".buttonTheme", function(e) {
+
+  var theme = $("input[name='opButtonTheme']:checked").val()
+
+  localStorage.buttonTheme = theme
+
+  // This is everything that should be themed
+  var themeThese = $(".generate, input.editButtons, #defaultOptions, #clearData, #takeScreenshotMain, #takeScreenshotFooter, #helpScreenshotOK, #footer, #screenshots, #editInfo")
+
+  if (theme == "Dark") {
+
+    $("img.phoneIcon").attr({src: "app/img/phone.png"})
+    $(".cameraIcon").attr({src: "app/img/cameraw.png"})
+    $("#cameraIconMobile").attr({src: "app/img/camera.png"})
+    $(themeThese).removeClass("lightTheme")
+
+  } else {
+
+    $("img.phoneIcon").attr({src: "app/img/phone.png"})
+    $(".cameraIcon").attr({src: "app/img/camera.png"})
+    $("#cameraIconMobile").attr({src: "app/img/cameraw.png"})
+    $(themeThese).addClass("lightTheme")
+
+  }
+
+})
+
+// Switch between Small and Large buttons
+function smallButtons(isSmall) {
+
+  if (isSmall == "1") {
+
+    $("#generateMain, #takeScreenshotMain").fadeOut()
+    $("#generateFooter, #takeScreenshotFooter").fadeIn()
+
+  } else {
+
+    $("#generateFooter, #takeScreenshotFooter").fadeOut()
+    $("#generateMain, #takeScreenshotMain").fadeIn()
+
+
+  }
+
+}
+
+// Toggle Small buttons
+$(document).on("change", "#opButtonSmall", function(e) {
+
+  var isSmall = ($(this).is(":checked")) ? "1" : "0"
+
+  smallButtons(isSmall)
+
+  localStorage.buttonSmall = isSmall
+
+})
 
 // Change Screenshot Timeout time (Mobile Only)
 $(document).on("change", "#opScreenshotTime", function(e) {
@@ -503,19 +636,31 @@ $(document).on("click", ".takeScreenshot", function(e) {
   // Check if user is on Desktop or Mobile
   if (getWidth() < 1024) { // If Mobile
 
-    $(hideThese).fadeOut() // fade out to hint that it will fade back in? idk.
+    // Make sure user has acknowledged how mobile screenshots work
+    if (localStorage.helpMobileScreenshot != "1") {
 
-    // Show everything again (based on ScreenshotTime setting)
-    setTimeout("showElements()", (localStorage.screenshotTime * 1000))
+      $("#notification").html("<div id='helpScreenshotNotif'><h1>Mobile Screenshots</h1><p>All buttons are going disappear for "+localStorage.screenshotTime+" seconds. This gives you time to use the screenshot feature on your phone (usually hold Home and Volume + VOL Down) to capture just the generated text.</p><p>You can change how long buttons dissapear in the Options.<br /><input id='helpScreenshotOK' type='button' value='Okay' /></p></div>").slideDown()
+
+    } else {
+
+      $(hideThese).fadeOut() // fade out to hint that it will fade back in? idk.
+
+      // Show everything again (based on ScreenshotTime setting)
+      setTimeout("showElements()", (localStorage.screenshotTime * 1000))
+
+    }
+
+
 
   } else {
 
     $(hideThese).hide() // hide immediately
 
     // Take screenshot and place it in the Screenshots panel
-    html2canvas(document.querySelector("html")).then(canvas => {
+    html2canvas(document.querySelector("html"), { allowTaint: true ,scrollX: 0,scrollY: 0 }).then(canvas => {
         $("#placeScreenshots").append(canvas)
     });
+
 
     // Open the Screenshots panel again if it was already open
     if (isOpen == true) {
@@ -533,6 +678,14 @@ $(document).on("click", ".takeScreenshot", function(e) {
 
 })
 
+// Mobile user has read how screenshots work.
+$(document).on("click", "#helpScreenshotOK", function(e) {
+
+  localStorage.helpMobileScreenshot = "1"
+  $("#notification").slideUp()
+  $("#takeScreenshotMobile").trigger("click") // take a screenshot now
+
+})
 
 // Generate new word on spacebar click
 window.addEventListener('keydown', function(e) {
