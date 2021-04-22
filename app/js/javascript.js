@@ -465,19 +465,19 @@ $(document).on("click", ".buttonTheme", function(e) {
   localStorage.buttonTheme = theme
 
   // This is everything that should be themed
-  var themeThese = $("#generate, input.editButtons, #defaultOptions, #clearData, #takeScreenshot, #helpScreenshotOK, #footer, #screenshots, #editInfo")
+  var themeThese = $(".generate, input.editButtons, #defaultOptions, #clearData, #takeScreenshotMain, #takeScreenshotFooter, #helpScreenshotOK, #footer, #screenshots, #editInfo")
 
   if (theme == "Dark") {
 
     $("img.phoneIcon").attr({src: "app/img/phone.png"})
-    $("#cameraIcon").attr({src: "app/img/cameraw.png"})
+    $(".cameraIcon").attr({src: "app/img/cameraw.png"})
     $("#cameraIconMobile").attr({src: "app/img/camera.png"})
     $(themeThese).removeClass("lightTheme")
 
   } else {
 
     $("img.phoneIcon").attr({src: "app/img/phone.png"})
-    $("#cameraIcon").attr({src: "app/img/camera.png"})
+    $(".cameraIcon").attr({src: "app/img/camera.png"})
     $("#cameraIconMobile").attr({src: "app/img/cameraw.png"})
     $(themeThese).addClass("lightTheme")
 
