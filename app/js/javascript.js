@@ -18,6 +18,7 @@ wordDefaults = {
   shadowEnabled: "1",
 
   backgroundURL: "app/img/background.jpg",
+  screenshotTime: 5, // 5 seconds
 
   // Set localStorage back to defaults
   set: function(choice) {
@@ -65,6 +66,11 @@ wordDefaults = {
 
     }
 
+    if (choice == "all") {
+      localStorage.screenshotTime = this.screenshotTime
+      $("#opScreenshotTime").val(this.screenshotTime)
+    }
+
   }
 
 }
@@ -80,7 +86,7 @@ $("document").ready(function() {
   $("#edit2").val(localStorage.words2)
   $("#edit3").val(localStorage.words3)
 
-  // Set the default colors if they haven't been setting
+  // Set the default colors if they haven't been set
   if (!localStorage.shadowH) {
     wordDefaults.set("colors")
   }
@@ -88,6 +94,11 @@ $("document").ready(function() {
   // Set the default background if it hasn't been set
   if (!localStorage.backgroundURL) {
     wordDefaults.set("bg")
+  }
+
+  // Set default Screenshot time if it hasn't been set (consolidating all these soon)
+  if (!localStorage.screenshotTime) {
+    localStorage.screenshotTime = 5;
   }
 
   // Load selected or default colors and fill in the input boxes in Options
@@ -100,6 +111,7 @@ $("document").ready(function() {
   $("#opFontSize").val(localStorage.fontSize)
   $("html").css({"background-image" : "url("+localStorage.backgroundURL+")"})
   $("#opBackgroundURL").val(localStorage.backgroundURL)
+  $("#opScreenshotTime").val(localStorage.screenshotTime)
 
   // Give text a shadow if enabled and show inputs
   if (localStorage.shadowEnabled == "1") {
@@ -279,9 +291,16 @@ $(document).on("change", "#opFontColor", function(e) {
 // Change font size
 $(document).on("change", "#opFontSize", function(e) {
 
-  var fontSize = $(this).val()
-  $("#generatedName").css({"font-size": fontSize+"px"})
-  localStorage.fontSize = fontSize
+  var fontSize = parseInt($(this).val())
+
+  // If font size is not a number, reset to last working number
+  if (!isNumber(fontSize)) {
+    $("#opFontSize").val(localStorage.fontSize)
+  } else {
+    $("#generatedName").css({"font-size": fontSize+"px"})
+    localStorage.fontSize = fontSize
+  }
+
 
 })
 
@@ -305,12 +324,25 @@ $(document).on("click", "#opShadowEnabled", function(e) {
 $("#opTextShadows").on("change", "input", function(e) {
 
   // Grab the selected inputs. Check to make sure they're numbers later ;)
-  var shadowH = $("#opShadowH").val()
-  var shadowV = $("#opShadowV").val()
-  var blur = $("#opShadowBlur").val()
+  var shadowH = parseInt($("#opShadowH").val())
+  var shadowV = parseInt($("#opShadowV").val())
+  var blur = parseInt($("#opShadowBlur").val())
   var color = $("#opShadowColor").val()
 
-  $("#generatedName").css({"text-shadow" : shadowH+"px "+shadowV+"px "+blur+"px "+color})
+  // If any aren't a number, reset to last working number
+  if (!isNumber(shadowH)) {
+    $("#opShadowH").val(localStorage.shadowH)
+  }
+
+  if (!isNumber(shadowV)) {
+    $("#opShadowV").val(localStorage.shadowV)
+  }
+
+  if (!isNumber(blur)) {
+    $("#opShadowBlur").val(localStorage.shadowBlur)
+  }
+
+  $("#generatedName").css({"text-shadow" : localStorage.shadowH+"px "+localStorage.shadowV+"px "+localStorage.shadowBlur+"px "+color})
 
   // Save settings
   localStorage.shadowH = shadowH
@@ -345,6 +377,27 @@ $(document).on("click", "#opBackgroundReset", function(e) {
 
   $("html").css({"background-image":"url(app/img/background.jpg)"})
   $("#opBackgroundURL").val("background.jpg")
+
+})
+
+
+// Change Screenshot Timeout time (Mobile Only)
+$(document).on("change", "#opScreenshotTime", function(e) {
+
+  var ssTime = $(this).val()
+
+  // Make sure it's a number
+  if (!isNumber(ssTime)) {
+
+    // If it's not, reset to last working number
+    $(this).val(localStorage.screenshotTime)
+    return false
+
+  } else {
+
+    localStorage.screenshotTime = ssTime
+
+  }
 
 })
 
@@ -452,8 +505,8 @@ $(document).on("click", ".takeScreenshot", function(e) {
 
     $(hideThese).fadeOut() // fade out to hint that it will fade back in? idk.
 
-    // Show everything again after a while
-    setTimeout("showElements()", 5000)
+    // Show everything again (based on ScreenshotTime setting)
+    setTimeout("showElements()", (localStorage.screenshotTime * 1000))
 
   } else {
 
@@ -514,5 +567,7 @@ function getHeight() {
   );
 }
 
-console.log('Width:  ' +  getWidth() );
-console.log('Height: ' + getHeight() );
+// Check if string is a number
+function isNumber(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
