@@ -478,7 +478,7 @@ function endHighlight() {
 // Show elements that were hidden for screenshots
 function showElements() {
 
-  var showThese = $("#mainButtons, #footer, #editFooter")
+  var showThese = $("#mainButtons, #footer, #editFooter, #ssInfo")
 
   if (getWidth() < 1024) {
     $(showThese).fadeIn()
@@ -540,6 +540,19 @@ window.addEventListener('keydown', function(e) {
     $("#generate").trigger("click")
     e.preventDefault();
     //console.log(e)
+  }
+});
+
+// ESC closes Screenshots panel and Options box
+window.addEventListener('keydown', function(e) {
+  if(e.keyCode == 27) {
+    if ($("#options").is(":visible")) {
+      $("#optionsButton").trigger("click")
+    }
+    if ($("#screenshots").is(":visible")) {
+      $("#screenshotsButton").trigger("click")
+    }
+    e.preventDefault();
   }
 });
 

@@ -141,7 +141,7 @@ canvas {
 
   /* Don't display mobile only Options to desktop users */
   #opMobileSS {
-  /*  display: none; */
+    display: none;
   }
 }
 
