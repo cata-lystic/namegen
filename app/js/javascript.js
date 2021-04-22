@@ -18,6 +18,7 @@ wordDefaults = {
   shadowEnabled: "1",
 
   backgroundURL: "app/img/background.jpg",
+  buttonTheme: "Dark",
   screenshotTime: 5, // 5 seconds
   rotation: 0, // 0 degrees
   rotateX: 0,
@@ -77,6 +78,8 @@ wordDefaults = {
     if (choice == "all") {
       localStorage.screenshotTime = this.screenshotTime
       $("#opScreenshotTime").val(this.screenshotTime)
+      localStorage.buttonTheme = this.buttonTheme
+      $("input[value='"+this.buttonTheme+"']").prop({checked: true})
     }
 
     if (choice == "textTransform" || choice == "all") {
@@ -124,6 +127,15 @@ $("document").ready(function() {
     localStorage.screenshotTime = wordDefaults.screenshotTime;
   }
 
+  // Set default theme
+  if (!localStorage.buttonTheme) {
+    localStorage.buttonTheme = wordDefaults.buttonTheme
+  }
+  $("input[value='"+localStorage.buttonTheme+"']").prop({checked: true})
+  if (localStorage.buttonTheme == "Light") {
+    $("#opLight").trigger("click")
+  }
+
   if (!localStorage.rotateX) {
     wordDefaults.set("textTransform")
   }
@@ -155,6 +167,7 @@ $("document").ready(function() {
     $("#opShadowEnabled").prop({"checked":"checked"})
     $("#opTextShadowsInputs").show()
   }
+
 
   // Generate a word to begin with
   generate()
@@ -435,6 +448,34 @@ $(document).on("click", "#opBackgroundReset", function(e) {
 
   $("html").css({"background-image":"url(app/img/background.jpg)"})
   $("#opBackgroundURL").val("background.jpg")
+
+})
+
+// Change button theme
+$(document).on("click", ".buttonTheme", function(e) {
+
+  var theme = $("input[name='opButtonTheme']:checked").val()
+
+  localStorage.buttonTheme = theme
+
+  // This is everything that should be themed
+  var themeThese = $("#generate, input.editButtons, #defaultOptions, #clearData, #takeScreenshot, #helpScreenshotOK, #footer, #screenshots, #editInfo")
+
+  if (theme == "Dark") {
+
+    $("img.phoneIcon").attr({src: "app/img/phone.png"})
+    $("#cameraIcon").attr({src: "app/img/cameraw.png"})
+    $("#cameraIconMobile").attr({src: "app/img/camera.png"})
+    $(themeThese).removeClass("lightTheme")
+
+  } else {
+
+    $("img.phoneIcon").attr({src: "app/img/phone.png"})
+    $("#cameraIcon").attr({src: "app/img/camera.png"})
+    $("#cameraIconMobile").attr({src: "app/img/cameraw.png"})
+    $(themeThese).addClass("lightTheme")
+
+  }
 
 })
 
