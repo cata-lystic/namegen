@@ -561,10 +561,21 @@ $(document).on("click", ".takeScreenshot", function(e) {
   // Check if user is on Desktop or Mobile
   if (getWidth() < 1024) { // If Mobile
 
-    $(hideThese).fadeOut() // fade out to hint that it will fade back in? idk.
+    // Make sure user has acknowledged how mobile screenshots work
+    if (localStorage.helpMobileScreenshot != "1") {
 
-    // Show everything again (based on ScreenshotTime setting)
-    setTimeout("showElements()", (localStorage.screenshotTime * 1000))
+      $("#notification").html("<div id='helpScreenshotNotif'><h1>Mobile Screenshots</h1><p>All buttons are going disappear for "+localStorage.screenshotTime+" seconds. This gives you time to use the screenshot feature on your phone (usually hold Home and Volume + VOL Down) to capture just the generated text.</p><p>You can change how long buttons dissapear in the Options.<br /><input id='helpScreenshotOK' type='button' value='Okay' /></p></div>").slideDown()
+
+    } else {
+
+      $(hideThese).fadeOut() // fade out to hint that it will fade back in? idk.
+
+      // Show everything again (based on ScreenshotTime setting)
+      setTimeout("showElements()", (localStorage.screenshotTime * 1000))
+
+    }
+
+
 
   } else {
 
@@ -592,6 +603,14 @@ $(document).on("click", ".takeScreenshot", function(e) {
 
 })
 
+// Mobile user has read how screenshots work.
+$(document).on("click", "#helpScreenshotOK", function(e) {
+
+  localStorage.helpMobileScreenshot = "1"
+  $("#notification").slideUp()
+  $("#takeScreenshotMobile").trigger("click") // take a screenshot now
+
+})
 
 // Generate new word on spacebar click
 window.addEventListener('keydown', function(e) {

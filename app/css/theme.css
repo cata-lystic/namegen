@@ -150,7 +150,7 @@ canvas {
 /*
 @media only screen and (min-width: 1024px) { #generatedName { font-size: 6rem; } } */
 
-#generate, input.editButtons, #defaultOptions, #clearData, #takeScreenshot {
+#generate, input.editButtons, #defaultOptions, #clearData, #takeScreenshot, #helpScreenshotOK {
   margin-top: 30px;
   font-size: 2rem;
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
@@ -163,6 +163,10 @@ canvas {
   color: #eeeeee;
 }
 
+#helpScreenshotOK {
+  font-size: 1.5rem;
+}
+
 #takeScreenshot img {
   max-height: 25px;
 }
@@ -171,7 +175,7 @@ canvas {
   cursor: pointer;
 }
 
-#generate:hover, input.editButtons:hover, #defaultOptions:hover, #clearData:hover, #takeScreenshot:hover {
+#generate:hover, input.editButtons:hover, #defaultOptions:hover, #clearData:hover, #takeScreenshot:hover, helpScreenshotOK:hover {
   background: rgba(0, 0, 0, 0.5);
 }
 
@@ -181,6 +185,20 @@ canvas {
 
 #defaultOptions:hover, #clearData:hover {
   background: rgba(0, 0, 0, 0.5);
+}
+
+#notification {
+  width: 100%;
+  left: 0;
+  top: 0;
+  border-bottom: 1px solid #000000;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+}
+
+#helpScreenshotNotif {
+  padding: 2%;
 }
 
 #editFooter {
