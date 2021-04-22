@@ -1,4 +1,4 @@
-version = "1.2"
+version = "1.3"
 
 // Defaults class
 wordDefaults = {
@@ -18,6 +18,7 @@ wordDefaults = {
   shadowEnabled: "1",
 
   backgroundURL: "app/img/background.jpg",
+  screenshotTime: 5, // 5 seconds
 
   // Set localStorage back to defaults
   set: function(choice) {
@@ -65,6 +66,11 @@ wordDefaults = {
 
     }
 
+    if (choice == "all") {
+      localStorage.screenshotTime = this.screenshotTime
+      $("#opScreenshotTime").val(this.screenshotTime)
+    }
+
   }
 
 }
@@ -80,7 +86,7 @@ $("document").ready(function() {
   $("#edit2").val(localStorage.words2)
   $("#edit3").val(localStorage.words3)
 
-  // Set the default colors if they haven't been setting
+  // Set the default colors if they haven't been set
   if (!localStorage.shadowH) {
     wordDefaults.set("colors")
   }
@@ -88,6 +94,11 @@ $("document").ready(function() {
   // Set the default background if it hasn't been set
   if (!localStorage.backgroundURL) {
     wordDefaults.set("bg")
+  }
+
+  // Set default Screenshot time if it hasn't been set (consolidating all these soon)
+  if (!localStorage.screenshotTime) {
+    localStorage.screenshotTime = 5;
   }
 
   // Load selected or default colors and fill in the input boxes in Options
@@ -100,6 +111,7 @@ $("document").ready(function() {
   $("#opFontSize").val(localStorage.fontSize)
   $("html").css({"background-image" : "url("+localStorage.backgroundURL+")"})
   $("#opBackgroundURL").val(localStorage.backgroundURL)
+  $("#opScreenshotTime").val(localStorage.screenshotTime)
 
   // Give text a shadow if enabled and show inputs
   if (localStorage.shadowEnabled == "1") {
@@ -159,7 +171,7 @@ $(document).on("click", "#edit", function(e) {
     $("#generatedName,#footer").slideUp() // Also hide the footer because it gets in the way when mobile keyboard is in use
     $("#editSection").slideDown()
     $("input.editButtons").show()
-    $("#generate, #edit").hide()
+    $("#generate, #edit, #takeScreenshot").hide()
 
 })
 
@@ -186,7 +198,7 @@ $(document).on("click", "#save", function(e) {
   $("#editSection").slideUp()
   $("#generatedName,#footer").slideDown()
   $("input.editButtons").hide()
-  $("#generate, #edit, #optionsButton").show()
+  $("#generate, #edit, #optionsButton, #takeScreenshot").show()
 
   // Generate a new word using the new lists
   generate()
@@ -205,7 +217,7 @@ $(document).on("click", "#cancel", function(e) {
   $("#editSection").slideUp()
   $("#generatedName,#footer").slideDown()
   $("input.editButtons").hide()
-  $("#generate, #edit, #optionsButton").show()
+  $("#generate, #edit, #optionsButton, #takeScreenshot").show()
 
 })
 
@@ -279,9 +291,16 @@ $(document).on("change", "#opFontColor", function(e) {
 // Change font size
 $(document).on("change", "#opFontSize", function(e) {
 
-  var fontSize = $(this).val()
-  $("#generatedName").css({"font-size": fontSize+"px"})
-  localStorage.fontSize = fontSize
+  var fontSize = parseInt($(this).val())
+
+  // If font size is not a number, reset to last working number
+  if (!isNumber(fontSize)) {
+    $("#opFontSize").val(localStorage.fontSize)
+  } else {
+    $("#generatedName").css({"font-size": fontSize+"px"})
+    localStorage.fontSize = fontSize
+  }
+
 
 })
 
@@ -305,12 +324,25 @@ $(document).on("click", "#opShadowEnabled", function(e) {
 $("#opTextShadows").on("change", "input", function(e) {
 
   // Grab the selected inputs. Check to make sure they're numbers later ;)
-  var shadowH = $("#opShadowH").val()
-  var shadowV = $("#opShadowV").val()
-  var blur = $("#opShadowBlur").val()
+  var shadowH = parseInt($("#opShadowH").val())
+  var shadowV = parseInt($("#opShadowV").val())
+  var blur = parseInt($("#opShadowBlur").val())
   var color = $("#opShadowColor").val()
 
-  $("#generatedName").css({"text-shadow" : shadowH+"px "+shadowV+"px "+blur+"px "+color})
+  // If any aren't a number, reset to last working number
+  if (!isNumber(shadowH)) {
+    $("#opShadowH").val(localStorage.shadowH)
+  }
+
+  if (!isNumber(shadowV)) {
+    $("#opShadowV").val(localStorage.shadowV)
+  }
+
+  if (!isNumber(blur)) {
+    $("#opShadowBlur").val(localStorage.shadowBlur)
+  }
+
+  $("#generatedName").css({"text-shadow" : localStorage.shadowH+"px "+localStorage.shadowV+"px "+localStorage.shadowBlur+"px "+color})
 
   // Save settings
   localStorage.shadowH = shadowH
@@ -348,6 +380,27 @@ $(document).on("click", "#opBackgroundReset", function(e) {
 
 })
 
+
+// Change Screenshot Timeout time (Mobile Only)
+$(document).on("change", "#opScreenshotTime", function(e) {
+
+  var ssTime = $(this).val()
+
+  // Make sure it's a number
+  if (!isNumber(ssTime)) {
+
+    // If it's not, reset to last working number
+    $(this).val(localStorage.screenshotTime)
+    return false
+
+  } else {
+
+    localStorage.screenshotTime = ssTime
+
+  }
+
+})
+
 // Reset options to default
 $(document).on("click", "#defaultOptions", function(e) {
 
@@ -371,6 +424,115 @@ $(document).on("click", "#clearData", function(e) {
 })
 
 
+/* Screenshots */
+
+$(document).on("click", "#ssClose", function(e) {
+
+  $("#screenshots").fadeOut()
+
+})
+
+$(document).on("click", ".ssButton", function(e) {
+
+  // Screenshots work differently for mobile and desktop.
+  // Desktop users will create a screenshot of the page using html2canvas and have a screenshots panel showing all their screenshots.
+  // For Mobile users the icons and buttons on the screen will disappear for a period of time, giving the user time to take a screenshot with their phone.
+
+  // Check if user is on Desktop or Mobile
+  if (getWidth() < 1024) { // If Mobile
+
+    // Hide everything on the screen for a bit
+
+  }
+
+  // Check if Options box is already open
+  if ( $("#screenshots").is(":visible") ) {
+
+    // Disable any events from when it was turned on
+    //$(document).off("click", "#center")
+
+    $("#screenshots").fadeOut()
+
+  } else {
+
+    // Create an event that closes the Screenshots box when you click out of it
+    /*
+    $(document).on('click', '#center',  function(){
+      if ($(this).attr("id") != "screenshots") {
+        $("#screenshotsButton").trigger("click")
+      }
+    })*/
+
+    $("#screenshots").fadeIn()
+
+  }
+
+
+})
+
+
+function endHighlight() {
+  $("#screenshotsButton").removeClass("ssButtonNew")
+}
+
+// Show elements that were hidden for screenshots
+function showElements() {
+
+  var showThese = $("#mainButtons, #footer, #editFooter, #ssInfo")
+
+  if (getWidth() < 1024) {
+    $(showThese).fadeIn()
+  } else {
+    $(showThese).show()
+  }
+
+}
+
+$(document).on("click", ".takeScreenshot", function(e) {
+
+  // Was the Screenshots panel already open?
+  var isOpen = $("#screenshots").is(":visible")
+
+  // Screenshots work differently for mobile and desktop.
+  // Desktop users will create a screenshot of the page using html2canvas and have a screenshots panel showing all their screenshots.
+  // For Mobile users the icons and buttons on the screen will disappear for a period of time, giving the user time to take a screenshot with their phone.
+
+  // These are the elements to hide for all users
+  var hideThese = $("#mainButtons,#footer, #screenshots, #options, #ssNone, #editFooter")
+
+  // Check if user is on Desktop or Mobile
+  if (getWidth() < 1024) { // If Mobile
+
+    $(hideThese).fadeOut() // fade out to hint that it will fade back in? idk.
+
+    // Show everything again (based on ScreenshotTime setting)
+    setTimeout("showElements()", (localStorage.screenshotTime * 1000))
+
+  } else {
+
+    $(hideThese).hide() // hide immediately
+
+    // Take screenshot and place it in the Screenshots panel
+    html2canvas(document.querySelector("html")).then(canvas => {
+        $("#placeScreenshots").append(canvas)
+    });
+
+    // Open the Screenshots panel again if it was already open
+    if (isOpen == true) {
+      $("#screenshots").fadeIn()
+    } else {
+      // Highlight the "Screenshots" button. Remove highlight in 3 seconds
+      $("#screenshotsButton").addClass("ssButtonNew")
+      setTimeout("endHighlight()", 3000)
+    }
+
+    // Show the elements again right away
+    showElements()
+
+  }
+
+})
+
 
 // Generate new word on spacebar click
 window.addEventListener('keydown', function(e) {
@@ -380,3 +542,45 @@ window.addEventListener('keydown', function(e) {
     //console.log(e)
   }
 });
+
+// ESC closes Screenshots panel and Options box
+window.addEventListener('keydown', function(e) {
+  if(e.keyCode == 27) {
+    if ($("#options").is(":visible")) {
+      $("#optionsButton").trigger("click")
+    }
+    if ($("#screenshots").is(":visible")) {
+      $("#screenshotsButton").trigger("click")
+    }
+    e.preventDefault();
+  }
+});
+
+// Misc functions
+
+// Get screen width
+// From: https://stackoverflow.com/questions/1038727/how-to-get-browser-width-using-javascript-code
+function getWidth() {
+  return Math.max(
+    document.body.scrollWidth,
+    document.documentElement.scrollWidth,
+    document.body.offsetWidth,
+    document.documentElement.offsetWidth,
+    document.documentElement.clientWidth
+  );
+}
+
+function getHeight() {
+  return Math.max(
+    document.body.scrollHeight,
+    document.documentElement.scrollHeight,
+    document.body.offsetHeight,
+    document.documentElement.offsetHeight,
+    document.documentElement.clientHeight
+  );
+}
+
+// Check if string is a number
+function isNumber(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
