@@ -1,4 +1,4 @@
-version = "1.3"
+version = "1.4"
 
 // Defaults class
 wordDefaults = {
@@ -19,6 +19,14 @@ wordDefaults = {
 
   backgroundURL: "app/img/background.jpg",
   screenshotTime: 5, // 5 seconds
+  rotation: 0, // 0 degrees
+  rotateX: 0,
+  rotateY:  0,
+  rotateZ:  0,
+  skewX:  0,
+  skewY:  0,
+  posX:  0,
+  posY:  0,
 
   // Set localStorage back to defaults
   set: function(choice) {
@@ -71,6 +79,21 @@ wordDefaults = {
       $("#opScreenshotTime").val(this.screenshotTime)
     }
 
+    if (choice == "textTransform" || choice == "all") {
+      localStorage.rotateX = this.rotateX
+      localStorage.rotateY = this.rotateY
+      localStorage.rotateZ = this.rotateZ
+      localStorage.skewX = this.skewX
+      localStorage.skewY = this.skewY
+      localStorage.posX = this.posX
+      localStorage.posY = this.posY
+
+      // While these are all 0 just set all numbers to 0
+      $(".textTransform[type='number']").val(0)
+
+      $("#opRotateX").trigger("change")
+    }
+
   }
 
 }
@@ -98,8 +121,20 @@ $("document").ready(function() {
 
   // Set default Screenshot time if it hasn't been set (consolidating all these soon)
   if (!localStorage.screenshotTime) {
-    localStorage.screenshotTime = 5;
+    localStorage.screenshotTime = wordDefaults.screenshotTime;
   }
+
+  if (!localStorage.rotateX) {
+    wordDefaults.set("textTransform")
+  }
+  $("#opRotateX").val(localStorage.rotateX)
+  $("#opRotateY").val(localStorage.rotateY)
+  $("#opRotateZ").val(localStorage.rotateZ)
+  $("#opSkewX").val(localStorage.skewX)
+  $("#opSkewY").val(localStorage.skewY)
+  $("#opPosX").val(localStorage.posX)
+  $("#opPosY").val(localStorage.posY)
+  $("#opRotateX").trigger("change")
 
   // Load selected or default colors and fill in the input boxes in Options
   $("#generatedName").css({"color" : localStorage.fontColor})
@@ -112,6 +147,7 @@ $("document").ready(function() {
   $("html").css({"background-image" : "url("+localStorage.backgroundURL+")"})
   $("#opBackgroundURL").val(localStorage.backgroundURL)
   $("#opScreenshotTime").val(localStorage.screenshotTime)
+  $("#generatedName").css({"transform": "rotate("+localStorage.rotation+"deg)"})
 
   // Give text a shadow if enabled and show inputs
   if (localStorage.shadowEnabled == "1") {
@@ -301,6 +337,28 @@ $(document).on("change", "#opFontSize", function(e) {
     localStorage.fontSize = fontSize
   }
 
+})
+
+// Change word rotation and skew
+$(document).on("change", ".textTransform", function(e) {
+
+  var rotateX = parseInt($("#opRotateX").val())
+  var rotateY = parseInt($("#opRotateY").val())
+  var rotateZ = parseInt($("#opRotateZ").val())
+  var skewX = parseInt($("#opSkewX").val())
+  var skewY = parseInt($("#opSkewY").val())
+  var posX = parseInt($("#opPosX").val())
+  var posY = parseInt($("#opPosY").val())
+
+  $("#generatedName").css({"transform": "rotateX("+rotateX+"deg) rotateY("+rotateY+"deg) rotateZ("+rotateZ+"deg) skew("+skewX+"deg, "+skewY+"deg) translateX("+posX+"px) translateY("+posY+"px)"})
+
+  localStorage.rotateX = rotateX
+  localStorage.rotateY = rotateY
+  localStorage.rotateZ = rotateZ
+  localStorage.skewX = skewX
+  localStorage.skewY = skewY
+  localStorage.posX = posX
+  localStorage.posY = posY
 
 })
 
@@ -513,9 +571,10 @@ $(document).on("click", ".takeScreenshot", function(e) {
     $(hideThese).hide() // hide immediately
 
     // Take screenshot and place it in the Screenshots panel
-    html2canvas(document.querySelector("html")).then(canvas => {
+    html2canvas(document.querySelector("html"), { allowTaint: true ,scrollX: 0,scrollY: 0 }).then(canvas => {
         $("#placeScreenshots").append(canvas)
     });
+
 
     // Open the Screenshots panel again if it was already open
     if (isOpen == true) {

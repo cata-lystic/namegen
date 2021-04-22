@@ -7,7 +7,6 @@ body, html {
   max-height: 100%;
   overflow: hidden;
   display: grid;
-
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
 }
 
@@ -111,7 +110,9 @@ canvas {
 #generatedName {
     font-size: 68px;
     text-align: center;
+    display: inline-block;
 }
+
 
 /* Smalelr  screens never get screenshots box button */
 @media only screen and (max-width: 1024px) {
