@@ -39,6 +39,7 @@
 
   <body>
 
+    <!-- Screenshots side panel for desktop users. This feature doesn't work for mobile users. -->
     <div id="screenshots" style="display: none">
 
       <h1>Screenshots</h2>
@@ -97,7 +98,13 @@
       </div>
 
       <!-- Generate and Edit buttons -->
-      <p class="text-center"><input type="button" id="generate" value="Generate" /> <span id="takeScreenshot"><img src="app/img/cameraw.png" /></span><input type="button" id="save" value="Save" class="editButtons" style="display: none" /> <input type="button" id="cancel" value="Cancel" class="editButtons" style="display: none" /> <input type="button" id="clear" value="Clear" class="editButtons" style="display: none" /> <input type="button" id="reset" value="Reset" class="editButtons" style="display: none" /></p>
+      <div id="mainButtons">
+
+        <p class="text-center"><input type="button" id="generate" value="Generate" /> <span id="takeScreenshot" class="takeScreenshot">&nbsp;<img src="app/img/cameraw.png" />&nbsp;</span><input type="button" id="save" value="Save" class="editButtons" style="display: none" /> <input type="button" id="cancel" value="Cancel" class="editButtons" style="display: none" /> <input type="button" id="clear" value="Clear" class="editButtons" style="display: none" /> <input type="button" id="reset" value="Reset" class="editButtons" style="display: none" /></p>
+
+        <p id="takeScreenshotMobile" class="takeScreenshot">&nbsp;<img src="app/img/camera.png" height="40px" /></p>
+
+      </div>
 
     </div>
 

@@ -381,6 +381,17 @@ $(document).on("click", "#ssClose", function(e) {
 
 $(document).on("click", ".ssButton", function(e) {
 
+  // Screenshots work differently for mobile and desktop.
+  // Desktop users will create a screenshot of the page using html2canvas and have a screenshots panel showing all their screenshots.
+  // For Mobile users the icons and buttons on the screen will disappear for a period of time, giving the user time to take a screenshot with their phone.
+
+  // Check if user is on Desktop or Mobile
+  if (getWidth() < 1024) { // If Mobile
+
+    // Hide everything on the screen for a bit
+
+  }
+
   // Check if Options box is already open
   if ( $("#screenshots").is(":visible") ) {
 
@@ -411,29 +422,60 @@ function endHighlight() {
   $("#screenshotsButton").removeClass("ssButtonNew")
 }
 
-$(document).on("click", "#takeScreenshot", function(e) {
+// Show elements that were hidden for screenshots
+function showElements() {
+
+  var showThese = $("#mainButtons, #footer, #editFooter")
+
+  if (getWidth() < 1024) {
+    $(showThese).fadeIn()
+  } else {
+    $(showThese).show()
+  }
+
+}
+
+$(document).on("click", ".takeScreenshot", function(e) {
 
   // Was the Screenshots panel already open?
   var isOpen = $("#screenshots").is(":visible")
 
-  // Hide the on-screen elements
-  $(".editButtons, #generate, #takeScreenshot, #footer, #screenshots, #options, #ssNone").hide()
+  // Screenshots work differently for mobile and desktop.
+  // Desktop users will create a screenshot of the page using html2canvas and have a screenshots panel showing all their screenshots.
+  // For Mobile users the icons and buttons on the screen will disappear for a period of time, giving the user time to take a screenshot with their phone.
 
-  // Take screenshot and place it in the Screenshots panel
-  html2canvas(document.querySelector("html")).then(canvas => {
-      $("#placeScreenshots").append(canvas)
-  });
+  // These are the elements to hide for all users
+  var hideThese = $("#mainButtons,#footer, #screenshots, #options, #ssNone, #editFooter")
 
-  // Show the on-screen elements
-  $("#generate, #footer, #takeScreenshot, #edit, #optionsButton, #screenshotsButton, #ssInfo").show()
+  // Check if user is on Desktop or Mobile
+  if (getWidth() < 1024) { // If Mobile
 
-  // Open the Screenshots panel again if it was already open
-  if (isOpen == true) {
-    $("#screenshots").fadeIn()
+    $(hideThese).fadeOut() // fade out to hint that it will fade back in? idk.
+
+    // Show everything again after a while
+    setTimeout("showElements()", 5000)
+
   } else {
-    // Highlight the "Screenshots" button. Remove highlight in 3 seconds
-    $("#screenshotsButton").addClass("ssButtonNew")
-    setTimeout("endHighlight()", 3000)
+
+    $(hideThese).hide() // hide immediately
+
+    // Take screenshot and place it in the Screenshots panel
+    html2canvas(document.querySelector("html")).then(canvas => {
+        $("#placeScreenshots").append(canvas)
+    });
+
+    // Open the Screenshots panel again if it was already open
+    if (isOpen == true) {
+      $("#screenshots").fadeIn()
+    } else {
+      // Highlight the "Screenshots" button. Remove highlight in 3 seconds
+      $("#screenshotsButton").addClass("ssButtonNew")
+      setTimeout("endHighlight()", 3000)
+    }
+
+    // Show the elements again right away
+    showElements()
+
   }
 
 })
@@ -447,3 +489,30 @@ window.addEventListener('keydown', function(e) {
     //console.log(e)
   }
 });
+
+// Misc functions
+
+// Get screen width
+// From: https://stackoverflow.com/questions/1038727/how-to-get-browser-width-using-javascript-code
+function getWidth() {
+  return Math.max(
+    document.body.scrollWidth,
+    document.documentElement.scrollWidth,
+    document.body.offsetWidth,
+    document.documentElement.offsetWidth,
+    document.documentElement.clientWidth
+  );
+}
+
+function getHeight() {
+  return Math.max(
+    document.body.scrollHeight,
+    document.documentElement.scrollHeight,
+    document.body.offsetHeight,
+    document.documentElement.offsetHeight,
+    document.documentElement.clientHeight
+  );
+}
+
+console.log('Width:  ' +  getWidth() );
+console.log('Height: ' + getHeight() );

@@ -76,8 +76,7 @@ input:hover {
   top: 0;
   left: 0;
   height: 100%;
-  width: 20%;
-  min-width: 300px;
+  width: 100%;
   background: rgba(0, 0, 0, 0.50);
   color: #FFFFFF;
   padding: 0px 2%;
@@ -87,6 +86,7 @@ input:hover {
 .screenshot {
   width: 90%;
   max-width: 90%;
+  height: auto;
   margin-left: 5%;
   margin-top: 15px;
 }
@@ -95,19 +95,49 @@ input:hover {
   transition: background 2.0s !important;
 }
 
+
+
 .ssButtonNew {
   background: #d0bc06 !important;
 }
 
 canvas {
   max-width: 100%;
-  max-height: 150px;
+  height: auto;
+  max-height: 240px;
   margin-bottom: 20px;
 }
 
 #generatedName {
     font-size: 68px;
     text-align: center;
+}
+
+/* Smalelr  screens never get screenshots box button */
+@media only screen and (max-width: 1024px) {
+  #screenshotsButton {
+    display: none !important;
+  }
+  #takeScreenshot {
+    display: none !important;
+  }
+}
+
+/* Larger screens get smaller screenshots box */
+@media only screen and (min-width: 1024px) {
+  #screenshots {
+      width: 20%;
+      min-width: 300px;
+  }
+  #screenshotsButton {
+    display: inline-block;
+  }
+  canvas {
+    max-height: 150px;
+  }
+  #takeScreenshotMobile {
+    display: none !important;
+  }
 }
 
 /* Larger screens get larger font */
@@ -131,6 +161,9 @@ canvas {
   max-height: 25px;
 }
 
+#takeScreenshotMobile {
+  cursor: pointer;
+}
 
 #generate:hover, input.editButtons:hover, #defaultOptions:hover, #clearData:hover, #takeScreenshot:hover {
   background: rgba(0, 0, 0, 0.5);
