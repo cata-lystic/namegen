@@ -17,10 +17,11 @@ wordDefaults = {
   shadowColor: "#4d4d4d",
   shadowEnabled: "1",
 
-  backgroundURL: "app/img/background.jpg",
-  buttonTheme: "Dark",
+  backgroundURL: "app/img/background.jpg", // Can be external URL
+  buttonTheme: "Dark", // Dark or Light
+  buttonSmall: 0, // 1 = Small buttons, 0 = Normal buttons
   screenshotTime: 5, // 5 seconds
-  rotation: 0, // 0 degrees
+  rotation: 0, // 0 degrees. Same for everything below
   rotateX: 0,
   rotateY:  0,
   rotateZ:  0,
@@ -136,6 +137,11 @@ $("document").ready(function() {
     $("#opLight").trigger("click")
   }
 
+  if (localStorage.buttonSmall == "1") {
+      $("#opButtonSmall").prop({checked:true})
+      smallButtons(1)
+  }
+
   if (!localStorage.rotateX) {
     wordDefaults.set("textTransform")
   }
@@ -209,7 +215,7 @@ function generate() {
 }
 
 // Generate button
-$(document).on("click", "#generate", function(e) {
+$(document).on("click", ".generate", function(e) {
   generate()
 })
 
@@ -479,6 +485,34 @@ $(document).on("click", ".buttonTheme", function(e) {
 
 })
 
+// Switch between Small and Large buttons
+function smallButtons(isSmall) {
+
+  if (isSmall == "1") {
+
+    $("#generateMain, #takeScreenshotMain").fadeOut()
+    $("#generateFooter, #takeScreenshotFooter").fadeIn()
+
+  } else {
+
+    $("#generateFooter, #takeScreenshotFooter").fadeOut()
+    $("#generateMain, #takeScreenshotMain").fadeIn()
+
+
+  }
+
+}
+
+// Toggle Small buttons
+$(document).on("change", "#opButtonSmall", function(e) {
+
+  var isSmall = ($(this).is(":checked")) ? "1" : "0"
+
+  smallButtons(isSmall)
+
+  localStorage.buttonSmall = isSmall
+
+})
 
 // Change Screenshot Timeout time (Mobile Only)
 $(document).on("change", "#opScreenshotTime", function(e) {

@@ -132,7 +132,7 @@ canvas {
   #screenshotsButton {
     display: none !important;
   }
-  #takeScreenshot {
+  #takeScreenshotMain {
     display: none !important;
   }
 }
@@ -163,7 +163,7 @@ canvas {
 /*
 @media only screen and (min-width: 1024px) { #generatedName { font-size: 6rem; } } */
 
-#generate, input.editButtons, #defaultOptions, #clearData, #takeScreenshot, #helpScreenshotOK {
+.generate, input.editButtons, #defaultOptions, #clearData, #takeScreenshotMain, #takeScreenshotFooter, #helpScreenshotOK {
   margin-top: 30px;
   font-size: 1.8rem;
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
@@ -180,15 +180,22 @@ canvas {
   font-size: 1.5rem;
 }
 
-#takeScreenshot img {
+#takeScreenshotMain img {
   max-height: 25px;
+}
+
+#takeScreenshotFooter {
+  font-size: 1.2rem !important;
+}
+#takeScreenshotFooter img {
+  max-height: 20px;
 }
 
 #takeScreenshotMobile {
   cursor: pointer;
 }
 
-#generate:hover, input.editButtons:hover, #defaultOptions:hover, #clearData:hover, #takeScreenshot:hover, helpScreenshotOK:hover {
+.generate:hover, input.editButtons:hover, #defaultOptions:hover, #clearData:hover, helpScreenshotOK:hover {
   background: rgba(0, 0, 0, 0.5);
 }
 
@@ -201,12 +208,12 @@ canvas {
 }
 
 
-input.lightTheme, #takeScreenshot.lightTheme, #screenshots.lightTheme {
+input.lightTheme, #takeScreenshotMain.lightTheme, #takeScreenshotFooter.lightTheme, #screenshots.lightTheme {
   background: rgba(255, 255, 255, 0.6) !important;
   color: #000000 !important;
 
 }
-input.lightTheme:hover, #takeScreenshot.lightTheme, #screenshots.lightTheme:hover {
+input.lightTheme:hover, #takeScreenshot.lightTheme, #takeScreenshotFooter.lightTheme:hover, #screenshots.lightTheme:hover {
   background: rgba(255, 255, 255, 0.8) !important;
 }
 .lightTheme {
