@@ -1,4 +1,4 @@
-version = "1.2"
+version = "1.3"
 
 // Defaults class
 wordDefaults = {
@@ -159,7 +159,7 @@ $(document).on("click", "#edit", function(e) {
     $("#generatedName,#footer").slideUp() // Also hide the footer because it gets in the way when mobile keyboard is in use
     $("#editSection").slideDown()
     $("input.editButtons").show()
-    $("#generate, #edit").hide()
+    $("#generate, #edit, #takeScreenshot").hide()
 
 })
 
@@ -186,7 +186,7 @@ $(document).on("click", "#save", function(e) {
   $("#editSection").slideUp()
   $("#generatedName,#footer").slideDown()
   $("input.editButtons").hide()
-  $("#generate, #edit, #optionsButton").show()
+  $("#generate, #edit, #optionsButton, #takeScreenshot").show()
 
   // Generate a new word using the new lists
   generate()
@@ -205,7 +205,7 @@ $(document).on("click", "#cancel", function(e) {
   $("#editSection").slideUp()
   $("#generatedName,#footer").slideDown()
   $("input.editButtons").hide()
-  $("#generate, #edit, #optionsButton").show()
+  $("#generate, #edit, #optionsButton, #takeScreenshot").show()
 
 })
 
@@ -370,6 +370,73 @@ $(document).on("click", "#clearData", function(e) {
 
 })
 
+
+/* Screenshots */
+
+$(document).on("click", "#ssClose", function(e) {
+
+  $("#screenshots").fadeOut()
+
+})
+
+$(document).on("click", ".ssButton", function(e) {
+
+  // Check if Options box is already open
+  if ( $("#screenshots").is(":visible") ) {
+
+    // Disable any events from when it was turned on
+    //$(document).off("click", "#center")
+
+    $("#screenshots").fadeOut()
+
+  } else {
+
+    // Create an event that closes the Screenshots box when you click out of it
+    /*
+    $(document).on('click', '#center',  function(){
+      if ($(this).attr("id") != "screenshots") {
+        $("#screenshotsButton").trigger("click")
+      }
+    })*/
+
+    $("#screenshots").fadeIn()
+
+  }
+
+
+})
+
+
+function endHighlight() {
+  $("#screenshotsButton").removeClass("ssButtonNew")
+}
+
+$(document).on("click", "#takeScreenshot", function(e) {
+
+  // Was the Screenshots panel already open?
+  var isOpen = $("#screenshots").is(":visible")
+
+  // Hide the on-screen elements
+  $(".editButtons, #generate, #takeScreenshot, #footer, #screenshots, #options, #ssNone").hide()
+
+  // Take screenshot and place it in the Screenshots panel
+  html2canvas(document.querySelector("html")).then(canvas => {
+      $("#placeScreenshots").append(canvas)
+  });
+
+  // Show the on-screen elements
+  $("#generate, #footer, #takeScreenshot, #edit, #optionsButton, #screenshotsButton, #ssInfo").show()
+
+  // Open the Screenshots panel again if it was already open
+  if (isOpen == true) {
+    $("#screenshots").fadeIn()
+  } else {
+    // Highlight the "Screenshots" button. Remove highlight in 3 seconds
+    $("#screenshotsButton").addClass("ssButtonNew")
+    setTimeout("endHighlight()", 3000)
+  }
+
+})
 
 
 // Generate new word on spacebar click

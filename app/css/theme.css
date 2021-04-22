@@ -42,12 +42,16 @@ width: 100%;
   margin: 10px;
 }
 
-#optionsClose {
+#optionsClose, #ssClose {
   position: absolute;
   right: 2%;
   top: 2%;
   font-size: 1.5rem;
   cursor: pointer;
+}
+
+#ssClose {
+  right: 5%;
 }
 
 input[type='number'] {
@@ -66,6 +70,41 @@ input:hover {
   transition: background 0.6s;
 }
 
+#screenshots {
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 20%;
+  min-width: 300px;
+  background: rgba(0, 0, 0, 0.50);
+  color: #FFFFFF;
+  padding: 0px 2%;
+  overflow-y: scroll;
+}
+
+.screenshot {
+  width: 90%;
+  max-width: 90%;
+  margin-left: 5%;
+  margin-top: 15px;
+}
+
+#screenshotsButton {
+  transition: background 2.0s !important;
+}
+
+.ssButtonNew {
+  background: #d0bc06 !important;
+}
+
+canvas {
+  max-width: 100%;
+  max-height: 150px;
+  margin-bottom: 20px;
+}
+
 #generatedName {
     font-size: 68px;
     text-align: center;
@@ -75,7 +114,7 @@ input:hover {
 /*
 @media only screen and (min-width: 1024px) { #generatedName { font-size: 6rem; } } */
 
-#generate, input.editButtons, #defaultOptions, #clearData {
+#generate, input.editButtons, #defaultOptions, #clearData, #takeScreenshot {
   margin-top: 30px;
   font-size: 2rem;
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
@@ -88,8 +127,12 @@ input:hover {
   color: #eeeeee;
 }
 
+#takeScreenshot img {
+  max-height: 25px;
+}
 
-#generate:hover, input.editButtons:hover, #defaultOptions:hover, #clearData:hover {
+
+#generate:hover, input.editButtons:hover, #defaultOptions:hover, #clearData:hover, #takeScreenshot:hover {
   background: rgba(0, 0, 0, 0.5);
 }
 
