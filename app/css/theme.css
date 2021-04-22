@@ -21,7 +21,7 @@ width: 100%;
   width: 90%;
   position: absolute;
   z-index: 99;
-  top: 10%;
+  top: 5%;
   left: 5%;
   background: rgba(123, 141, 150, 0.9);
   border-radius: 10px;
@@ -34,6 +34,15 @@ width: 100%;
   #options {
       width: 60%;
       left: 20%;
+  }
+}
+
+/* Trying out smaller options box for desktop */
+@media only screen and (min-width: 1024px) {
+  #options {
+      width: 25%;
+      top: 3%;
+      left: 2%;
   }
 }
 
