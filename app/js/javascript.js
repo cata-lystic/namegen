@@ -4,9 +4,7 @@ version = "1.5" // The Words Update
 wordDefaults = {
 
   // Default words are currently based on previous Ubuntu version names. Note: I'm not affiliated with them at all.
-  words: ["Warty Hoary Breezy Dapper Edgy Feisty Gutsy Hardy Intrepid Jaunty Karmic Lucid Maveric Natty Oneiric Precise Quantal Raring Saucy Trusty Utopic Vivid Wily Xenial Yakkety Zesty Artful Bionic Cosmic Disco Eoan Focal Groovy Hisute", "Warthog Hedgehog Badger Drake Eft Fawn Gibbon Heron Ibex Jackalope Koala Lynx Meerkat Narwhal Ocelot Pangolin Quetzal Ringtail Salamander Tahr Unicorn Vervet Werewolf Xerus Yak Zupus Aardvark Beaver Cuttlefish Dingo Ermine Fossa Gorilla Hippo",
-  "One Two Three"],
-
+  words: [ "Breezy\nDapper\nEdgy\nGutsy\nLucid\nPrecise\nTrusty\nCosmic", "Hedgehog\nFawn\nKoala\nLynx\nOcelot\nSalamander\nGorilla\nHippo" ],
   fontColor: "#000000",
   fontSize: "68", /* currently in 'px' units */
   shadowH: "3",
@@ -209,12 +207,13 @@ function generate() {
   // Grab the list of words
   var words = JSON.parse(localStorage.words)
   var finalWord = "" // combined word
+  console.log(words)
 
   // Loop through each set of words. Choose one from each.
   $.each( words, function( key, value ) {
-    var thisWord = randWord(value).split(" ")
+    var thisWord = randWord(value).split("\n")
     if (thisWord != "") {
-      finalWord += randWord(value.split(" "))+" "
+      finalWord += randWord(value.split("\n"))+" "
     }
 
   })
@@ -271,7 +270,7 @@ $(document).on("click", "#save", function(e) {
   $("#editSection").slideUp()
   $("#generatedName,#footer").slideDown()
   $("input.editButtons").hide()
-  $("#generateMain, #edit, #optionsButton, #takeScreenshotMain").show()
+  $("#generateMain, #edit, #optionsButton, #takeScreenshotMain, #screenshotsButton").show()
 
   // Generate a new word using the new lists
   generate()
@@ -298,7 +297,7 @@ $(document).on("click", "#cancel", function(e) {
   $("#editSection").slideUp()
   $("#generatedName,#footer").slideDown()
   $("input.editButtons").hide()
-  $("#generateMain, #edit, #optionsButton, #takeScreenshotMain").show()
+  $("#generateMain, #edit, #optionsButton, #takeScreenshotMain, #screenshotsButton").show()
 
 })
 
@@ -332,13 +331,17 @@ $(document).on("click", ".addRemove", function(e) {
 
   var choice = $(this).val()
 
+
   if (choice == "+") {
 
     $("#editWordsBoxes").append('<textarea id="" rows="6" cols="30" class="editTextarea"></textarea>')
 
-  } else {
+  } else if (choice == "-") {
 
-    $("textarea.editTextarea:last").remove()
+    // Remove last textarea if there is more than one
+    if ( $("textarea.editTextarea").length > 1) {
+      $("textarea.editTextarea:last").remove()
+    }
 
   }
 
