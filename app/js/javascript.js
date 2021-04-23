@@ -1,13 +1,11 @@
-version = "1.4"
+version = "1.5" // The Words Update
 
 // Defaults class
 wordDefaults = {
 
-  // Default words. Currently supports 3, will start with 2, but soon support as many as user wants.
   // Default words are currently based on previous Ubuntu version names. Note: I'm not affiliated with them at all.
-  words1: "Warty Hoary Breezy Dapper Edgy Feisty Gutsy Hardy Intrepid Jaunty Karmic Lucid Maveric Natty Oneiric Precise Quantal Raring Saucy Trusty Utopic Vivid Wily Xenial Yakkety Zesty Artful Bionic Cosmic Disco Eoan Focal Groovy Hisute",
-  words2: "Warthog Hedgehog Badger Drake Eft Fawn Gibbon Heron Ibex Jackalope Koala Lynx Meerkat Narwhal Ocelot Pangolin Quetzal Ringtail Salamander Tahr Unicorn Vervet Werewolf Xerus Yak Zupus Aardvark Beaver Cuttlefish Dingo Ermine Fossa Gorilla Hippo",
-  words3: "",
+  words: ["Warty Hoary Breezy Dapper Edgy Feisty Gutsy Hardy Intrepid Jaunty Karmic Lucid Maveric Natty Oneiric Precise Quantal Raring Saucy Trusty Utopic Vivid Wily Xenial Yakkety Zesty Artful Bionic Cosmic Disco Eoan Focal Groovy Hisute", "Warthog Hedgehog Badger Drake Eft Fawn Gibbon Heron Ibex Jackalope Koala Lynx Meerkat Narwhal Ocelot Pangolin Quetzal Ringtail Salamander Tahr Unicorn Vervet Werewolf Xerus Yak Zupus Aardvark Beaver Cuttlefish Dingo Ermine Fossa Gorilla Hippo",
+  "One Two Three"],
 
   fontColor: "#000000",
   fontSize: "68", /* currently in 'px' units */
@@ -35,9 +33,7 @@ wordDefaults = {
 
     // Reset words
     if (choice == "words") {
-      localStorage.words1 = this.words1
-      localStorage.words2 = this.words2
-      localStorage.words3 = this.words3
+      localStorage.words = JSON.stringify(this.words)
     }
 
     // Reset colors
@@ -105,13 +101,23 @@ wordDefaults = {
 // Do this on startup
 $("document").ready(function() {
 
-  // Set the default words if they haven't been set
-  if (!localStorage.words1) wordDefaults.set("words")
 
   // Load the defaults into the edit boxes
-  $("#edit1").val(localStorage.words1)
-  $("#edit2").val(localStorage.words2)
-  $("#edit3").val(localStorage.words3)
+
+  if (!localStorage.words) {
+    wordDefaults.set("words")
+    localStorage.words = JSON.stringify(wordDefaults.words)
+  }
+  var words = JSON.parse(localStorage.words)
+  //
+  // Loop through each set of words. Create a textarea for each one
+  $.each( words, function( key, value ) {
+
+    if (value != "") {
+      $("#editWordsBoxes").append('<textarea id="" rows="6" cols="30" class="editTextarea">'+value+'</textarea>')
+    }
+
+  })
 
   // Set the default colors if they haven't been set
   if (!localStorage.shadowH) {
@@ -200,17 +206,21 @@ function randWord(words) {
 // Generate a new name from all three boxes
 function generate() {
 
-  // Turn each set of words into an array
-  var word1 = randWord(localStorage["words1"].split(" "))
-  var word2 = randWord(localStorage["words2"].split(" "))
-  var word3 = randWord(localStorage["words3"].split(" "))
+  // Grab the list of words
+  var words = JSON.parse(localStorage.words)
+  var finalWord = "" // combined word
 
-  // If words after the first are not blank, add a space to before it and append it to the final word
-  word1 += (word2 != "") ? " "+word2 : ""
-  word1 += (word3 != "") ? " "+word3 : ""
+  // Loop through each set of words. Choose one from each.
+  $.each( words, function( key, value ) {
+    var thisWord = randWord(value).split(" ")
+    if (thisWord != "") {
+      finalWord += randWord(value.split(" "))+" "
+    }
 
-  // Output the final words. Excluding word3 for now
-  $("#generatedName").text(word1)
+  })
+
+  // Output the final words.
+  $("#generatedName").text(finalWord)
 
 }
 
@@ -226,7 +236,7 @@ $(document).on("click", "#edit", function(e) {
     $("#generatedName,#footer").slideUp() // Also hide the footer because it gets in the way when mobile keyboard is in use
     $("#editSection").slideDown()
     $("input.editButtons").show()
-    $("#generate, #edit, #takeScreenshot").hide()
+    $("#generateMain, #edit, #takeScreenshotMain").hide()
 
 })
 
@@ -234,26 +244,34 @@ $(document).on("click", "#edit", function(e) {
 $(document).on("click", "#save", function(e) {
 
   // This is a quick app so it won't do much checking to see if the textarea boxes are valid. It's just going to save the whole value directly to the localStorage
-  var words1 = $("#edit1").val()
-  var words2 = $("#edit2").val()
-  var words3 = $("#edit3").val()
+  var words = []
+  var num = 0 // Only count up if data (textarea box) wasn't blank
 
-  // If all three are blank, cancel instead
-  if (words1 == "" && words2 == "" && words3 =="") {
-    $("#cancel").trigger("click")
-    return false
-  }
+  $("textarea.editTextarea").each(function(index) {
 
-  // Save settings
-  localStorage.words1 = words1
-  localStorage.words2 = words2
-  localStorage.words3 = words3
+    var data = $(this).val()
+
+    if (data != "" && data != undefined) {
+
+      words[num] = data
+      num++ // Move num up because this was successful
+
+    } else {
+
+      $(this).remove()
+
+    }
+
+  })
+
+  // Save words
+  localStorage.words = JSON.stringify(words)
 
   // Hide the edit area and bring back the home screen
   $("#editSection").slideUp()
   $("#generatedName,#footer").slideDown()
   $("input.editButtons").hide()
-  $("#generate, #edit, #optionsButton, #takeScreenshot").show()
+  $("#generateMain, #edit, #optionsButton, #takeScreenshotMain").show()
 
   // Generate a new word using the new lists
   generate()
@@ -264,15 +282,23 @@ $(document).on("click", "#save", function(e) {
 $(document).on("click", "#cancel", function(e) {
 
   // Load the last set words into the edit boxes
-  $("#edit1").val(localStorage.words1)
-  $("#edit2").val(localStorage.words2)
-  $("#edit3").val(localStorage.words3)
+  var words = JSON.parse(localStorage.words)
+  $("#editWordsBoxes").html("")
+
+  // Loop through each set of words. Create a textarea for each one
+  $.each( words, function( key, value ) {
+
+    if (value != "") {
+      $("#editWordsBoxes").append('<textarea id="" rows="6" cols="30" class="editTextarea">'+value+'</textarea>')
+    }
+
+  })
 
   // Hide the edit area and bring back the home screen
   $("#editSection").slideUp()
   $("#generatedName,#footer").slideDown()
   $("input.editButtons").hide()
-  $("#generate, #edit, #optionsButton, #takeScreenshot").show()
+  $("#generateMain, #edit, #optionsButton, #takeScreenshotMain").show()
 
 })
 
@@ -280,7 +306,7 @@ $(document).on("click", "#cancel", function(e) {
 $(document).on("mouseup", "#clear", function(e) {
 
     // Put the default content into the word boxes. If the user cancels after resetting, it will go back to what they had before editing
-    $("#edit1,#edit2,#edit3").val("")
+    $("textarea.editTextarea").val("")
 
 })
 
@@ -288,9 +314,33 @@ $(document).on("mouseup", "#clear", function(e) {
 $(document).on("click", "#reset", function(e) {
 
   // Put the default content into the word boxes. If the user cancels after resetting, it will go back to what they had before editing
-  $("#edit1").val(wordDefaults.words1)
-  $("#edit2").val(wordDefaults.words2)
-  $("#edit3").val(wordDefaults.words3)
+  var words = wordDefaults.words
+  $("#editWordsBoxes").html("")
+
+  // Loop through each set of words. Create a textarea for each one
+  $.each( words, function( key, value ) {
+
+    if (value != "") {
+      $("#editWordsBoxes").append('<textarea id="" rows="6" cols="30" class="editTextarea">'+value+'</textarea>')
+    }
+
+  })
+
+})
+
+$(document).on("click", ".addRemove", function(e) {
+
+  var choice = $(this).val()
+
+  if (choice == "+") {
+
+    $("#editWordsBoxes").append('<textarea id="" rows="6" cols="30" class="editTextarea"></textarea>')
+
+  } else {
+
+    $("textarea.editTextarea:last").remove()
+
+  }
 
 })
 
@@ -690,7 +740,7 @@ $(document).on("click", "#helpScreenshotOK", function(e) {
 // Generate new word on spacebar click
 window.addEventListener('keydown', function(e) {
   if(e.keyCode == 32 && e.target == document.body && $("#generatedName").is(":visible")) {
-    $("#generate").trigger("click")
+    $("#generateMain").trigger("click")
     e.preventDefault();
     //console.log(e)
   }
