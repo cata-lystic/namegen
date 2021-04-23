@@ -38,6 +38,9 @@ wordDefaults = {
     // Reset colors
     if (choice == "colors" || choice == "all") {
       localStorage.font = this.font
+      localStorage.bold = this.bold
+      localStorage.italic = this.italic
+      localStorage.underline = this.underline
       localStorage.fontColor = this.fontColor
       localStorage.fontSize = this.fontSize
       localStorage.shadowH = this.shadowH
@@ -63,6 +66,7 @@ wordDefaults = {
       $("#opFontColor").spectrum({color: this.fontColor})
       $("#opFontSize").val(this.fontSize)
       $("#opShadowColor").spectrum({color: this.shadowColor})
+      textDecoration(this.bold, this.italic, this.underline)
     }
 
     if (choice == "bg" || choice == "all") {
@@ -149,13 +153,16 @@ $("document").ready(function() {
   $("#opShadowH").val(localStorage.shadowH)
   $("#opShadowV").val(localStorage.shadowV)
   $("#opShadowBlur").val(localStorage.shadowBlur)
+  $("#opFont").val(localStorage.font)
   $("#opFontColor").attr({"value": localStorage.fontColor})
   $("#opShadowColor").attr({"value": localStorage.shadowColor})
   $("#opFontSize").val(localStorage.fontSize)
   $("html").css({"background-image" : "url("+localStorage.backgroundURL+")"})
   $("#opBackgroundURL").val(localStorage.backgroundURL)
   $("#opScreenshotTime").val(localStorage.screenshotTime)
-  $("#generatedName").css({"transform": "rotate("+localStorage.rotation+"deg)"})
+  $("#generatedName").css({"font-family":localStorage.font, "transform": "rotate("+localStorage.rotation+"deg)"})
+  textDecoration(localStorage.bold, localStorage.italic, localStorage.underline) // Decorate generated name
+
 
   // Give text a shadow if enabled and show inputs
   if (localStorage.shadowEnabled == "1") {
@@ -377,7 +384,54 @@ $(document).on("change", "#opFont", function(e) {
 
   $("#generatedName").css({"font-family": font})
 
+  localStorage.font = font
+
 })
+
+// Add bold, italic, or underline to generated name
+function textDecoration(bold, italic, underline) {
+
+  if (bold == 1) {
+    $("#generatedName").css({"font-weight": "bold"})
+    $("#opBold").prop({"checked":true})
+  } else {
+    $("#generatedName").css({"font-weight": "normal"})
+    $("#opBold").prop({"checked":false})
+  }
+
+  if (italic == 1) {
+    $("#generatedName").css({"font-style": "italic"})
+    $("#opItalic").prop({"checked":true})
+  } else {
+    $("#generatedName").css({"font-style": "normal"})
+    $("#opItalic").prop({"checked":false})
+  }
+
+  if (underline == 1) {
+    $("#generatedName").css({"text-decoration": "underline"})
+    $("#opUnderline").prop({"checked":true})
+  } else {
+    $("#generatedName").css({"text-decoration": "none"})
+    $("#opUnderline").prop({"checked":false})
+  }
+
+}
+
+// Change font decoration (bold, italic, underline)
+$(document).on("click", "input.fontDecoration", function(e) {
+
+  var bold = ($("#opBold").is(":checked")) ? 1 : 0
+  var italic = ($("#opItalic").is(":checked")) ? 1 : 0
+  var underline = ($("#opUnderline").is(":checked")) ? 1 : 0
+
+  textDecoration(bold, italic, underline)
+
+  localStorage.bold = bold
+  localStorage.italic = italic
+  localStorage.underline = underline
+
+})
+
 
 // Change font color
 $(document).on("change", "#opFontColor", function(e) {
