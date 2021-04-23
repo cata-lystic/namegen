@@ -5,6 +5,7 @@ wordDefaults = {
 
   // Default words are currently based on previous Ubuntu version names. Note: I'm not affiliated with them at all.
   words: [ "Breezy\nDapper\nEdgy\nGutsy\nLucid\nPrecise\nTrusty\nCosmic", "Hedgehog\nFawn\nKoala\nLynx\nOcelot\nSalamander\nGorilla\nHippo" ],
+  font: "Arial, Helvetica, Sans-Serif", // default font
   fontColor: "#000000",
   fontSize: "68", /* currently in 'px' units */
   shadowH: "3",
@@ -36,6 +37,7 @@ wordDefaults = {
 
     // Reset colors
     if (choice == "colors" || choice == "all") {
+      localStorage.font = this.font
       localStorage.fontColor = this.fontColor
       localStorage.fontSize = this.fontSize
       localStorage.shadowH = this.shadowH
@@ -44,7 +46,7 @@ wordDefaults = {
       localStorage.shadowColor = this.shadowColor
       localStorage.shadowEnabled = this.shadowEnabled
 
-      $("#generatedName").css({"color" : this.fontColor})
+      $("#generatedName").css({"font-family":this.font, "color" : this.fontColor})
       if (this.shadowEnabled == "1") {
         $("#generatedName").css({"text-shadow" : this.shadowH+"px "+this.shadowV+"px "+this.shadowBlur+"px "+this.shadowColor})
         $("#opShadowEnabled").prop({"checked":"checked"})
@@ -57,6 +59,7 @@ wordDefaults = {
       $("#opShadowH").val(this.shadowH)
       $("#opShadowV").val(this.shadowV)
       $("#opShadowBlur").val(this.shadowBlur)
+      $("#opFont").val(this.font)
       $("#opFontColor").spectrum({color: this.fontColor})
       $("#opFontSize").val(this.fontSize)
       $("#opShadowColor").spectrum({color: this.shadowColor})
@@ -100,10 +103,9 @@ wordDefaults = {
 $("document").ready(function() {
 
 
-  // Load the defaults into the edit boxes
-
+  // Load the defaults into the edit boxes.
   if (!localStorage.words) {
-    wordDefaults.set("words")
+    wordDefaults.set("all")
     localStorage.words = JSON.stringify(wordDefaults.words)
   }
   var words = JSON.parse(localStorage.words)
@@ -117,38 +119,22 @@ $("document").ready(function() {
 
   })
 
-  // Set the default colors if they haven't been set
-  if (!localStorage.shadowH) {
-    wordDefaults.set("colors")
-  }
 
-  // Set the default background if it hasn't been set
-  if (!localStorage.backgroundURL) {
-    wordDefaults.set("bg")
-  }
+  // Fill out the Options page based on the user's settings
 
-  // Set default Screenshot time if it hasn't been set (consolidating all these soon)
-  if (!localStorage.screenshotTime) {
-    localStorage.screenshotTime = wordDefaults.screenshotTime;
-  }
-
-  // Set default theme
-  if (!localStorage.buttonTheme) {
-    localStorage.buttonTheme = wordDefaults.buttonTheme
-  }
+  // Button Theme options
   $("input[value='"+localStorage.buttonTheme+"']").prop({checked: true})
   if (localStorage.buttonTheme == "Light") {
     $("#opLight").trigger("click")
   }
 
+  // SmalL Buttons options
   if (localStorage.buttonSmall == "1") {
       $("#opButtonSmall").prop({checked:true})
       smallButtons(1)
   }
 
-  if (!localStorage.rotateX) {
-    wordDefaults.set("textTransform")
-  }
+  // Text Rotate/Skew/Position
   $("#opRotateX").val(localStorage.rotateX)
   $("#opRotateY").val(localStorage.rotateY)
   $("#opRotateZ").val(localStorage.rotateZ)
@@ -207,7 +193,6 @@ function generate() {
   // Grab the list of words
   var words = JSON.parse(localStorage.words)
   var finalWord = "" // combined word
-  console.log(words)
 
   // Loop through each set of words. Choose one from each.
   $.each( words, function( key, value ) {
@@ -385,7 +370,14 @@ $(document).on("click", ".optionsButton", function(e) {
 
 })
 
+// Change font
+$(document).on("change", "#opFont", function(e) {
 
+  var font = $(this).val()
+
+  $("#generatedName").css({"font-family": font})
+
+})
 
 // Change font color
 $(document).on("change", "#opFontColor", function(e) {
