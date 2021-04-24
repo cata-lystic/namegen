@@ -1,4 +1,4 @@
-version = "1.6"
+version = "1.5" // The Words Update
 
 // Defaults class
 wordDefaults = {
