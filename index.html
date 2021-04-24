@@ -65,7 +65,24 @@
 
         <h1>Options</h1>
 
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size: <input id="opFontSize" type="number" value="68" step="1" style="width: 45px" class="" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Color: <input id="opFontColor" type="text" class="spectrum" /></p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Font: <select id="opFont">
+          <option value="Arial, Helvetica, Sans-Serif">Arial, Helvetica</option>
+          <option value="Arial Black, Gadget, Sans-Serif">Arial Black, Gadget</option>
+          <option value="Comic Sans MS, Textile, Cursive">Comic Sans MS, Textile</option>
+          <option value="Courier New, Courier, Monospace">Courier New, Courier</option>
+          <option value="Georgia, Times New Roman, Times, Serif">Georgia, Times New Roman</option>
+          <option value="Impact, Charcoal, Sans-Serif">Impact, Charcoal</option>
+          <option value="Lucida Console, Monaco, Monospace">Lucida Console, Monaco</option>
+          <option value="Lucida Sans Unicode, Lucida Grande, Sans-Serif">Lucida Sans Unicode, Lucida Grande</option>
+          <option value="Palatino Linotype, Book Antiqua, Palatino, Serif">Palatino, Book Antiqua</option>
+          <option value="Times New Roman, Times, Serif">Times New Roman, Times</option>
+          <option value="Trebuchet MS, Helvetica, Sans-Serif">Trebuchet MS, Helvetica</option>
+          <option value="Verdana, Geneva, Sans-Serif">Verdana, Geneva</option>
+        </select></p>
+
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp<label><input id="opBold" type="checkbox" class="fontDecoration" value="1" /> Bold</label>&nbsp;&nbsp;<label><input id="opItalic" type="checkbox" class="fontDecoration" value="1" /> Italic</label>&nbsp;&nbsp;<label><input id="opUnderline" type="checkbox" class="fontDecoration" value="1" /> Underline</label>
+
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size: <input id="opFontSize" type="number" value="68" min="1" step="1" style="width: 45px" class="" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Color: <input id="opFontColor" type="text" class="spectrum" /></p>
 
         <p>Rotation: <input id="opRotateZ" type="number" value="0" step="10" style="width: 45px" class="textTransform" /> Z &nbsp;&nbsp;<input id="opRotateX" type="number" value="0" step="10" style="width: 45px" class="textTransform" /> X &nbsp;&nbsp;<input id="opRotateY" type="number" value="0" step="10" style="width: 45px" class="textTransform" /> Y</p>
 
@@ -75,10 +92,11 @@
 
         <p>Shadow: <label for="opShadowEnabled"><input id="opShadowEnabled" type="checkbox" value="1" /> Enabled</label></p>
         <div id="opTextShadows">
-          <p id="opTextShadowsInputs" style="display: none"><p>Hor: <input id="opShadowH" type="number" value="3" /> Vert: <input id="opShadowV" type="number" value="3" /> Blur: <input id="opShadowBlur" type="number" value="5" /> Color: <input id="opShadowColor" class="spectrum" type="text" value="#4d4d4d" /></p>
+          <p id="opTextShadowsInputs" style="display: none"><p>Hor: <input id="opShadowH" type="number" value="3" /> Vert: <input id="opShadowV" type="number" value="3" /> Blur: <input id="opShadowBlur" type="number" min="0" value="5" /> Color: <input id="opShadowColor" class="spectrum" type="text" value="#4d4d4d" /></p>
         </div>
 
-        <p>Background URL: <input type="text" id="opBackgroundURL" value="background.jpg" style="width: 40%" /> <input type="button" id="opBackgroundChange" value="&check;" /> <input type="button" id="opBackgroundReset" value="&#x2717;" /></p>
+        <p>Background: <input type="button" id="opBgUpload" value="Upload" /> URL: <input type="text" id="opBackgroundURL" value="background.jpg" style="width: 40%" /> <input type="button" id="opBackgroundChange" value="&check;" /> <input type="button" id="opBackgroundReset" value="&#x2717;" /></p>
+        <input id="opBgUploadForm" type="file" onchange="encodeImageFileAsURL(this)" hidden />
 
         <p>Buttons: <label><input id="opDark" type="radio" name="opButtonTheme" value="Dark" class="buttonTheme" /> Dark</label> <label><input id="opLight" type="radio" name="opButtonTheme" value="Light" class="buttonTheme" />  Light</label> <label><input type="checkbox" id="opButtonSmall" value="1" /> Small</label></p>
 
@@ -92,19 +110,17 @@
 
     <div id="center">
 
-
-
       <!-- Main box. Shows generated name -->
       <span id="generatedName"></span>
 
       <!-- Edit section -->
       <div id="editSection" style="display: none">
 
-        <p id="editInfo">Separate each word by a space.</p>
+        <p id="editInfo">Put word(s) on a new line.</p>
 
-        <textarea id="edit1" rows="6" cols="30"></textarea>
-        <textarea id="edit2" rows="6" cols="30"></textarea>
-        <textarea id="edit3" rows="6" cols="30"></textarea>
+        <div id="editWordsBoxes"></div>
+
+        <input type="button" value="+" class="addRemove" /> <input type="button" value="-" class="addRemove" />
 
       </div>
 
@@ -136,4 +152,5 @@
     <script src="app/js/javascript.js"></script>
 
   </body>
+
 </html>

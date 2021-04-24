@@ -1,14 +1,11 @@
-version = "1.4"
+version = "1.5" // The Words Update
 
 // Defaults class
 wordDefaults = {
 
-  // Default words. Currently supports 3, will start with 2, but soon support as many as user wants.
   // Default words are currently based on previous Ubuntu version names. Note: I'm not affiliated with them at all.
-  words1: "Warty Hoary Breezy Dapper Edgy Feisty Gutsy Hardy Intrepid Jaunty Karmic Lucid Maveric Natty Oneiric Precise Quantal Raring Saucy Trusty Utopic Vivid Wily Xenial Yakkety Zesty Artful Bionic Cosmic Disco Eoan Focal Groovy Hisute",
-  words2: "Warthog Hedgehog Badger Drake Eft Fawn Gibbon Heron Ibex Jackalope Koala Lynx Meerkat Narwhal Ocelot Pangolin Quetzal Ringtail Salamander Tahr Unicorn Vervet Werewolf Xerus Yak Zupus Aardvark Beaver Cuttlefish Dingo Ermine Fossa Gorilla Hippo",
-  words3: "",
-
+  words: [ "Breezy\nDapper\nEdgy\nGutsy\nLucid\nPrecise\nTrusty\nCosmic", "Hedgehog\nFawn\nKoala\nLynx\nOcelot\nSalamander\nGorilla\nHippo" ],
+  font: "Arial, Helvetica, Sans-Serif", // default font
   fontColor: "#000000",
   fontSize: "68", /* currently in 'px' units */
   shadowH: "3",
@@ -18,6 +15,7 @@ wordDefaults = {
   shadowEnabled: "1",
 
   backgroundURL: "app/img/background.jpg", // Can be external URL
+  backgroundIsURL: 1, // 1 if background is a URL. 0 if it becomes a Hash (on file upload)
   buttonTheme: "Dark", // Dark or Light
   buttonSmall: 0, // 1 = Small buttons, 0 = Normal buttons
   screenshotTime: 5, // 5 seconds
@@ -35,13 +33,15 @@ wordDefaults = {
 
     // Reset words
     if (choice == "words") {
-      localStorage.words1 = this.words1
-      localStorage.words2 = this.words2
-      localStorage.words3 = this.words3
+      localStorage.words = JSON.stringify(this.words)
     }
 
     // Reset colors
     if (choice == "colors" || choice == "all") {
+      localStorage.font = this.font
+      localStorage.bold = this.bold
+      localStorage.italic = this.italic
+      localStorage.underline = this.underline
       localStorage.fontColor = this.fontColor
       localStorage.fontSize = this.fontSize
       localStorage.shadowH = this.shadowH
@@ -50,7 +50,7 @@ wordDefaults = {
       localStorage.shadowColor = this.shadowColor
       localStorage.shadowEnabled = this.shadowEnabled
 
-      $("#generatedName").css({"color" : this.fontColor})
+      $("#generatedName").css({"font-family":this.font, "color" : this.fontColor})
       if (this.shadowEnabled == "1") {
         $("#generatedName").css({"text-shadow" : this.shadowH+"px "+this.shadowV+"px "+this.shadowBlur+"px "+this.shadowColor})
         $("#opShadowEnabled").prop({"checked":"checked"})
@@ -63,14 +63,17 @@ wordDefaults = {
       $("#opShadowH").val(this.shadowH)
       $("#opShadowV").val(this.shadowV)
       $("#opShadowBlur").val(this.shadowBlur)
+      $("#opFont").val(this.font)
       $("#opFontColor").spectrum({color: this.fontColor})
       $("#opFontSize").val(this.fontSize)
       $("#opShadowColor").spectrum({color: this.shadowColor})
+      textDecoration(this.bold, this.italic, this.underline)
     }
 
     if (choice == "bg" || choice == "all") {
 
       localStorage.backgroundURL = this.backgroundURL
+      localStorage.backgroundIsURL = this.backgroundIsURL
       $("html").css({"background-image": "url("+this.backgroundURL+")"})
       $("#opBackgroundURL").val(this.backgroundURL)
 
@@ -105,46 +108,39 @@ wordDefaults = {
 // Do this on startup
 $("document").ready(function() {
 
-  // Set the default words if they haven't been set
-  if (!localStorage.words1) wordDefaults.set("words")
 
-  // Load the defaults into the edit boxes
-  $("#edit1").val(localStorage.words1)
-  $("#edit2").val(localStorage.words2)
-  $("#edit3").val(localStorage.words3)
-
-  // Set the default colors if they haven't been set
-  if (!localStorage.shadowH) {
-    wordDefaults.set("colors")
+  // Load the defaults into the edit boxes.
+  if (!localStorage.words) {
+    wordDefaults.set("all")
+    localStorage.words = JSON.stringify(wordDefaults.words)
   }
+  var words = JSON.parse(localStorage.words)
+  //
+  // Loop through each set of words. Create a textarea for each one
+  $.each( words, function( key, value ) {
 
-  // Set the default background if it hasn't been set
-  if (!localStorage.backgroundURL) {
-    wordDefaults.set("bg")
-  }
+    if (value != "") {
+      $("#editWordsBoxes").append('<textarea id="" rows="6" cols="30" class="editTextarea">'+value+'</textarea>')
+    }
 
-  // Set default Screenshot time if it hasn't been set (consolidating all these soon)
-  if (!localStorage.screenshotTime) {
-    localStorage.screenshotTime = wordDefaults.screenshotTime;
-  }
+  })
 
-  // Set default theme
-  if (!localStorage.buttonTheme) {
-    localStorage.buttonTheme = wordDefaults.buttonTheme
-  }
+
+  // Fill out the Options page based on the user's settings
+
+  // Button Theme options
   $("input[value='"+localStorage.buttonTheme+"']").prop({checked: true})
   if (localStorage.buttonTheme == "Light") {
     $("#opLight").trigger("click")
   }
 
+  // SmalL Buttons options
   if (localStorage.buttonSmall == "1") {
       $("#opButtonSmall").prop({checked:true})
       smallButtons(1)
   }
 
-  if (!localStorage.rotateX) {
-    wordDefaults.set("textTransform")
-  }
+  // Text Rotate/Skew/Position
   $("#opRotateX").val(localStorage.rotateX)
   $("#opRotateY").val(localStorage.rotateY)
   $("#opRotateZ").val(localStorage.rotateZ)
@@ -159,13 +155,18 @@ $("document").ready(function() {
   $("#opShadowH").val(localStorage.shadowH)
   $("#opShadowV").val(localStorage.shadowV)
   $("#opShadowBlur").val(localStorage.shadowBlur)
+  $("#opFont").val(localStorage.font)
   $("#opFontColor").attr({"value": localStorage.fontColor})
   $("#opShadowColor").attr({"value": localStorage.shadowColor})
   $("#opFontSize").val(localStorage.fontSize)
   $("html").css({"background-image" : "url("+localStorage.backgroundURL+")"})
-  $("#opBackgroundURL").val(localStorage.backgroundURL)
+  if (localStorage.backgroundIsURL == 1) {
+    $("#opBackgroundURL").val(localStorage.backgroundURL)
+  }
   $("#opScreenshotTime").val(localStorage.screenshotTime)
-  $("#generatedName").css({"transform": "rotate("+localStorage.rotation+"deg)"})
+  $("#generatedName").css({"font-family":localStorage.font, "transform": "rotate("+localStorage.rotation+"deg)"})
+  textDecoration(localStorage.bold, localStorage.italic, localStorage.underline) // Decorate generated name
+
 
   // Give text a shadow if enabled and show inputs
   if (localStorage.shadowEnabled == "1") {
@@ -200,17 +201,21 @@ function randWord(words) {
 // Generate a new name from all three boxes
 function generate() {
 
-  // Turn each set of words into an array
-  var word1 = randWord(localStorage["words1"].split(" "))
-  var word2 = randWord(localStorage["words2"].split(" "))
-  var word3 = randWord(localStorage["words3"].split(" "))
+  // Grab the list of words
+  var words = JSON.parse(localStorage.words)
+  var finalWord = "" // combined word
 
-  // If words after the first are not blank, add a space to before it and append it to the final word
-  word1 += (word2 != "") ? " "+word2 : ""
-  word1 += (word3 != "") ? " "+word3 : ""
+  // Loop through each set of words. Choose one from each.
+  $.each( words, function( key, value ) {
+    var thisWord = randWord(value).split("\n")
+    if (thisWord != "") {
+      finalWord += randWord(value.split("\n"))+" "
+    }
 
-  // Output the final words. Excluding word3 for now
-  $("#generatedName").text(word1)
+  })
+
+  // Output the final words.
+  $("#generatedName").text(finalWord)
 
 }
 
@@ -226,7 +231,7 @@ $(document).on("click", "#edit", function(e) {
     $("#generatedName,#footer").slideUp() // Also hide the footer because it gets in the way when mobile keyboard is in use
     $("#editSection").slideDown()
     $("input.editButtons").show()
-    $("#generate, #edit, #takeScreenshot").hide()
+    $("#generateMain, #edit, #takeScreenshotMain").hide()
 
 })
 
@@ -234,26 +239,40 @@ $(document).on("click", "#edit", function(e) {
 $(document).on("click", "#save", function(e) {
 
   // This is a quick app so it won't do much checking to see if the textarea boxes are valid. It's just going to save the whole value directly to the localStorage
-  var words1 = $("#edit1").val()
-  var words2 = $("#edit2").val()
-  var words3 = $("#edit3").val()
+  var words = []
+  var num = 0 // Only count up if data (textarea box) wasn't blank
 
-  // If all three are blank, cancel instead
-  if (words1 == "" && words2 == "" && words3 =="") {
+  $("textarea.editTextarea").each(function(index) {
+
+    var data = $(this).val()
+
+    if (data != "" && data != undefined) {
+
+      words[num] = data
+      num++ // Move num up because this was successful
+
+    } else {
+
+      $(this).remove()
+
+    }
+
+  })
+
+  // If all the boxes were empty, click "Cancel" instead.
+  if (!words[0]) {
     $("#cancel").trigger("click")
     return false
   }
 
-  // Save settings
-  localStorage.words1 = words1
-  localStorage.words2 = words2
-  localStorage.words3 = words3
+  // Save words
+  localStorage.words = JSON.stringify(words)
 
   // Hide the edit area and bring back the home screen
   $("#editSection").slideUp()
   $("#generatedName,#footer").slideDown()
   $("input.editButtons").hide()
-  $("#generate, #edit, #optionsButton, #takeScreenshot").show()
+  $("#generateMain, #edit, #optionsButton, #takeScreenshotMain, #screenshotsButton").show()
 
   // Generate a new word using the new lists
   generate()
@@ -264,15 +283,23 @@ $(document).on("click", "#save", function(e) {
 $(document).on("click", "#cancel", function(e) {
 
   // Load the last set words into the edit boxes
-  $("#edit1").val(localStorage.words1)
-  $("#edit2").val(localStorage.words2)
-  $("#edit3").val(localStorage.words3)
+  var words = JSON.parse(localStorage.words)
+  $("#editWordsBoxes").html("")
+
+  // Loop through each set of words. Create a textarea for each one
+  $.each( words, function( key, value ) {
+
+    if (value != "") {
+      $("#editWordsBoxes").append('<textarea id="" rows="6" cols="30" class="editTextarea">'+value+'</textarea>')
+    }
+
+  })
 
   // Hide the edit area and bring back the home screen
   $("#editSection").slideUp()
   $("#generatedName,#footer").slideDown()
   $("input.editButtons").hide()
-  $("#generate, #edit, #optionsButton, #takeScreenshot").show()
+  $("#generateMain, #edit, #optionsButton, #takeScreenshotMain, #screenshotsButton").show()
 
 })
 
@@ -280,7 +307,7 @@ $(document).on("click", "#cancel", function(e) {
 $(document).on("mouseup", "#clear", function(e) {
 
     // Put the default content into the word boxes. If the user cancels after resetting, it will go back to what they had before editing
-    $("#edit1,#edit2,#edit3").val("")
+    $("textarea.editTextarea").val("")
 
 })
 
@@ -288,9 +315,37 @@ $(document).on("mouseup", "#clear", function(e) {
 $(document).on("click", "#reset", function(e) {
 
   // Put the default content into the word boxes. If the user cancels after resetting, it will go back to what they had before editing
-  $("#edit1").val(wordDefaults.words1)
-  $("#edit2").val(wordDefaults.words2)
-  $("#edit3").val(wordDefaults.words3)
+  var words = wordDefaults.words
+  $("#editWordsBoxes").html("")
+
+  // Loop through each set of words. Create a textarea for each one
+  $.each( words, function( key, value ) {
+
+    if (value != "") {
+      $("#editWordsBoxes").append('<textarea id="" rows="6" cols="30" class="editTextarea">'+value+'</textarea>')
+    }
+
+  })
+
+})
+
+$(document).on("click", ".addRemove", function(e) {
+
+  var choice = $(this).val()
+
+
+  if (choice == "+") {
+
+    $("#editWordsBoxes").append('<textarea id="" rows="6" cols="30" class="editTextarea"></textarea>')
+
+  } else if (choice == "-") {
+
+    // Remove last textarea if there is more than one
+    if ( $("textarea.editTextarea").length > 1) {
+      $("textarea.editTextarea:last").remove()
+    }
+
+  }
 
 })
 
@@ -332,6 +387,60 @@ $(document).on("click", ".optionsButton", function(e) {
 
 })
 
+// Change font
+$(document).on("change", "#opFont", function(e) {
+
+  var font = $(this).val()
+
+  $("#generatedName").css({"font-family": font})
+
+  localStorage.font = font
+
+})
+
+// Add bold, italic, or underline to generated name
+function textDecoration(bold, italic, underline) {
+
+  if (bold == 1) {
+    $("#generatedName").css({"font-weight": "bold"})
+    $("#opBold").prop({"checked":true})
+  } else {
+    $("#generatedName").css({"font-weight": "normal"})
+    $("#opBold").prop({"checked":false})
+  }
+
+  if (italic == 1) {
+    $("#generatedName").css({"font-style": "italic"})
+    $("#opItalic").prop({"checked":true})
+  } else {
+    $("#generatedName").css({"font-style": "normal"})
+    $("#opItalic").prop({"checked":false})
+  }
+
+  if (underline == 1) {
+    $("#generatedName").css({"text-decoration": "underline"})
+    $("#opUnderline").prop({"checked":true})
+  } else {
+    $("#generatedName").css({"text-decoration": "none"})
+    $("#opUnderline").prop({"checked":false})
+  }
+
+}
+
+// Change font decoration (bold, italic, underline)
+$(document).on("click", "input.fontDecoration", function(e) {
+
+  var bold = ($("#opBold").is(":checked")) ? 1 : 0
+  var italic = ($("#opItalic").is(":checked")) ? 1 : 0
+  var underline = ($("#opUnderline").is(":checked")) ? 1 : 0
+
+  textDecoration(bold, italic, underline)
+
+  localStorage.bold = bold
+  localStorage.italic = italic
+  localStorage.underline = underline
+
+})
 
 
 // Change font color
@@ -415,7 +524,7 @@ $("#opTextShadows").on("change", "input", function(e) {
     $("#opShadowV").val(localStorage.shadowV)
   }
 
-  if (!isNumber(blur)) {
+  if (!isNumber(blur) || blur < 0) {
     $("#opShadowBlur").val(localStorage.shadowBlur)
   }
 
@@ -603,6 +712,11 @@ $(document).on("click", ".ssButton", function(e) {
 
 })
 
+// Upload button that leads to file upload for background change
+$(document).on("click", "#opBgUpload", function(e) {
+  $("#opBgUploadForm").trigger("click")
+})
+
 
 function endHighlight() {
   $("#screenshotsButton").removeClass("ssButtonNew")
@@ -690,7 +804,7 @@ $(document).on("click", "#helpScreenshotOK", function(e) {
 // Generate new word on spacebar click
 window.addEventListener('keydown', function(e) {
   if(e.keyCode == 32 && e.target == document.body && $("#generatedName").is(":visible")) {
-    $("#generate").trigger("click")
+    $("#generateMain").trigger("click")
     e.preventDefault();
     //console.log(e)
   }
@@ -736,4 +850,30 @@ function getHeight() {
 // Check if string is a number
 function isNumber(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+// Load image from file upload (having xss issues. may have to make a hidden image from url and then canvas copy it) and make a base64 hash of it. This will allow background to be loaded offline.
+// Thanks to https://stackoverflow.com/a/20285053
+// File size validation thanks to https://stackoverflow.com/a/3717847
+function encodeImageFileAsURL(element) {
+  var file = element.files[0];
+
+  var filesize = element.files[0].size/1024/1024
+
+  // File cannot be larger than 4 MB (localStorage limits)
+  if (filesize > 4) {
+    alert('Max file size is 4 MB. This file size is: ' + filesize.toFixed(2) + 'MB');
+    return false
+  }
+
+  var reader = new FileReader();
+  reader.onloadend = function() {
+    //console.log('RESULT', reader.result)
+    localStorage.backgroundURL = reader.result // store hash as the background user wants to load
+    $("html").css({"background-image": "url("+localStorage.backgroundURL+")"})
+    //$("#opBackgroundURL").val(localStorage.backgroundURL)
+    localStorage.backgroundIsURL = 0 // Background is a Hash now, not a URL
+  }
+
+  reader.readAsDataURL(file);
 }
