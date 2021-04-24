@@ -13,7 +13,6 @@ wordDefaults = {
   shadowBlur: "5",
   shadowColor: "#4d4d4d",
   shadowEnabled: "1",
-
   backgroundURL: "app/img/background.jpg", // Can be external URL
   backgroundIsURL: 1, // 1 if background is a URL. 0 if it becomes a Hash (on file upload)
   buttonTheme: "Dark", // Dark or Light
@@ -463,6 +462,21 @@ $(document).on("change", "#opFontSize", function(e) {
   } else {
     $("#generatedName").css({"font-size": fontSize+"px"})
     localStorage.fontSize = fontSize
+  }
+
+})
+
+// Change generated word max width
+$(document).on("change", "#opFontWidth", function(e) {
+
+  var fontWidth = parseInt($(this).val())
+
+  // If font size is not a number, reset to last working number
+  if (!isNumber(fontWidth) || fontWidth < 20 || fontWidth > 100) {
+    $("#opFontWidth").val(localStorage.fontWidth)
+  } else {
+    $("#generatedName").css({"width": fontWidth+"%"})
+    localStorage.fontWidth = fontWidth
   }
 
 })
