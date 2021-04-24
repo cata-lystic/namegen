@@ -259,6 +259,12 @@ $(document).on("click", "#save", function(e) {
 
   })
 
+  // If all the boxes were empty, click "Cancel" instead.
+  if (!words[0]) {
+    $("#cancel").trigger("click")
+    return false
+  }
+
   // Save words
   localStorage.words = JSON.stringify(words)
 
@@ -847,7 +853,8 @@ function isNumber(n) {
 }
 
 // Load image from file upload (having xss issues. may have to make a hidden image from url and then canvas copy it) and make a base64 hash of it. This will allow background to be loaded offline.
-// Thanks to https://stackoverflow.com/questions/6150289/how-can-i-convert-an-image-into-base64-string-using-javascript/20285053#20285053
+// Thanks to https://stackoverflow.com/a/20285053
+// File size validation thanks to https://stackoverflow.com/a/3717847
 function encodeImageFileAsURL(element) {
   var file = element.files[0];
 
@@ -870,12 +877,3 @@ function encodeImageFileAsURL(element) {
 
   reader.readAsDataURL(file);
 }
-/*function ValidateSize(file) {
-        var FileSize = file.files[0].size / 1024 / 1024; // in MiB
-        if (FileSize > 2) {
-            alert('File size exceeds 2 MiB');
-           // $(file).val(''); //for clearing with Jquery
-        } else {
-
-        }
-    }*/
