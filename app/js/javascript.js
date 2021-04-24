@@ -702,6 +702,11 @@ $(document).on("click", ".ssButton", function(e) {
 
 })
 
+// Upload button that leads to file upload for background change
+$(document).on("click", "#opBgUpload", function(e) {
+  $("#opBgUploadForm").trigger("click")
+})
+
 
 function endHighlight() {
   $("#screenshotsButton").removeClass("ssButtonNew")
@@ -835,4 +840,19 @@ function getHeight() {
 // Check if string is a number
 function isNumber(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+// Load image from file upload (having xss issues. may have to make a hidden image from url and then canvas copy it) and make a base64 hash of it. This will allow background to be loaded offline.
+// Thanks to https://stackoverflow.com/questions/6150289/how-can-i-convert-an-image-into-base64-string-using-javascript/20285053#20285053
+function encodeImageFileAsURL(element) {
+  var file = element.files[0];
+  var reader = new FileReader();
+  reader.onloadend = function() {
+    //console.log('RESULT', reader.result)
+    localStorage.backgroundURL = reader.result // store hash as the background user wants to load
+    $("html").css({"background-image": "url("+localStorage.backgroundURL+")"})
+    $("#opBackgroundURL").val(localStorage.backgroundURL)
+  }
+
+  reader.readAsDataURL(file);
 }
