@@ -1,4 +1,4 @@
-version = "1.6"
+version = "1.5" // The Words Update
 
 // Defaults class
 wordDefaults = {
@@ -458,7 +458,7 @@ $(document).on("change", "#opFontSize", function(e) {
   var fontSize = parseInt($(this).val())
 
   // If font size is not a number, reset to last working number
-  if (!isNumber(fontSize) || fontSize < 1) {
+  if (!isNumber(fontSize)) {
     $("#opFontSize").val(localStorage.fontSize)
   } else {
     $("#generatedName").css({"font-size": fontSize+"px"})
