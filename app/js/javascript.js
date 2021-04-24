@@ -15,6 +15,7 @@ wordDefaults = {
   shadowEnabled: "1",
 
   backgroundURL: "app/img/background.jpg", // Can be external URL
+  backgroundIsURL: 1, // 1 if background is a URL. 0 if it becomes a Hash (on file upload)
   buttonTheme: "Dark", // Dark or Light
   buttonSmall: 0, // 1 = Small buttons, 0 = Normal buttons
   screenshotTime: 5, // 5 seconds
@@ -72,6 +73,7 @@ wordDefaults = {
     if (choice == "bg" || choice == "all") {
 
       localStorage.backgroundURL = this.backgroundURL
+      localStorage.backgroundIsURL = this.backgroundIsURL
       $("html").css({"background-image": "url("+this.backgroundURL+")"})
       $("#opBackgroundURL").val(this.backgroundURL)
 
@@ -158,7 +160,9 @@ $("document").ready(function() {
   $("#opShadowColor").attr({"value": localStorage.shadowColor})
   $("#opFontSize").val(localStorage.fontSize)
   $("html").css({"background-image" : "url("+localStorage.backgroundURL+")"})
-  $("#opBackgroundURL").val(localStorage.backgroundURL)
+  if (localStorage.backgroundIsURL == 1) {
+    $("#opBackgroundURL").val(localStorage.backgroundURL)
+  }
   $("#opScreenshotTime").val(localStorage.screenshotTime)
   $("#generatedName").css({"font-family":localStorage.font, "transform": "rotate("+localStorage.rotation+"deg)"})
   textDecoration(localStorage.bold, localStorage.italic, localStorage.underline) // Decorate generated name
@@ -514,7 +518,7 @@ $("#opTextShadows").on("change", "input", function(e) {
     $("#opShadowV").val(localStorage.shadowV)
   }
 
-  if (!isNumber(blur)) {
+  if (!isNumber(blur) || blur < 0) {
     $("#opShadowBlur").val(localStorage.shadowBlur)
   }
 
@@ -846,13 +850,32 @@ function isNumber(n) {
 // Thanks to https://stackoverflow.com/questions/6150289/how-can-i-convert-an-image-into-base64-string-using-javascript/20285053#20285053
 function encodeImageFileAsURL(element) {
   var file = element.files[0];
+
+  var filesize = element.files[0].size/1024/1024
+
+  // File cannot be larger than 4 MB (localStorage limits)
+  if (filesize > 4) {
+    alert('Max file size is 4 MB. This file size is: ' + filesize.toFixed(2) + 'MB');
+    return false
+  }
+
   var reader = new FileReader();
   reader.onloadend = function() {
     //console.log('RESULT', reader.result)
     localStorage.backgroundURL = reader.result // store hash as the background user wants to load
     $("html").css({"background-image": "url("+localStorage.backgroundURL+")"})
-    $("#opBackgroundURL").val(localStorage.backgroundURL)
+    //$("#opBackgroundURL").val(localStorage.backgroundURL)
+    localStorage.backgroundIsURL = 0 // Background is a Hash now, not a URL
   }
 
   reader.readAsDataURL(file);
 }
+/*function ValidateSize(file) {
+        var FileSize = file.files[0].size / 1024 / 1024; // in MiB
+        if (FileSize > 2) {
+            alert('File size exceeds 2 MiB');
+           // $(file).val(''); //for clearing with Jquery
+        } else {
+
+        }
+    }*/
