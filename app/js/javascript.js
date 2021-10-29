@@ -665,6 +665,20 @@ $(document).on("change", "#opScreenshotTime", function(e) {
 
 })
 
+
+// Preview button
+$(document).on("click", "#previewScreen", function(e) {
+
+  $("#options").css("opacity", "0.1")
+  setTimeout("previewReturn()", 4000)
+
+})
+
+function previewReturn() {
+  $("#options").css("opacity", "1")
+}
+
+
 // Reset options to default
 $(document).on("click", "#defaultOptions", function(e) {
 

@@ -27,7 +27,7 @@ width: 100%;
   background: rgba(123, 141, 150, 0.97);
   border-radius: 10px;
   color: #eeeeee;
-  transition: opacity 0.8s;
+  transition: opacity 0.6s;
 }
 
 /* Larger screens get smaller options box */
@@ -82,6 +82,8 @@ width: 100%;
   margin: 0px !important;
 }
 
+
+
 input[type='number'] {
   width: 35px;
   padding: 5px 5px !important;
@@ -95,7 +97,7 @@ input, select {
 }
 input:hover, select:hover {
   background: rgba(255, 255, 255, 0.5);
-  transition: background 0.6s;
+  transition: background 0.5s;
 }
 
 #screenshots {
@@ -120,7 +122,7 @@ input:hover, select:hover {
 }
 
 #screenshotsButton {
-  transition: background 2.0s !important;
+  transition: background 1.8s !important;
 }
 
 
@@ -179,8 +181,8 @@ canvas {
 /*
 @media only screen and (min-width: 1024px) { #generatedName { font-size: 6rem; } } */
 
-.generate, input.editButtons, #defaultOptions, #clearData, #takeScreenshotMain, #takeScreenshotFooter, #helpScreenshotOK, .addRemove {
-  margin-top: 30px;
+.generate, input.editButtons, #optionsFooterButtons input, #clearData, #takeScreenshotMain, #takeScreenshotFooter, #helpScreenshotOK, .addRemove {
+  margin-top: 5px;
   font-size: 1.6rem;
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
   cursor: pointer;
@@ -188,7 +190,7 @@ canvas {
   border-radius: 10px;
   border: none;
   padding: 2px 6px !important;
-  transition: background 0.6s;
+  transition: background 0.5s;
   color: #eeeeee;
 }
 
@@ -211,15 +213,15 @@ canvas {
   cursor: pointer;
 }
 
-.generate:hover, input.editButtons:hover, #defaultOptions:hover, #clearData:hover, helpScreenshotOK:hover, .addRemove:hover {
+.generate:hover, input.editButtons:hover, #optionsFooterButtons input:hover, #clearData:hover, helpScreenshotOK:hover, .addRemove:hover {
   background: rgba(0, 0, 0, 0.5);
 }
 
-#defaultOptions, #clearData {
+#clearData, #optionsFooterButtons input {
   background: rgba(0, 0, 0, 0.3);
 }
 
-#defaultOptions:hover, #clearData:hover {
+#clearData:hover, #optionsFooterButtons input:hover {
   background: rgba(0, 0, 0, 0.5);
 }
 
@@ -300,7 +302,7 @@ input.lightTheme:hover, #takeScreenshot.lightTheme:hover, #takeScreenshotFooter.
   color: #212121;
 }
 
-#editFooter input, #defaultOptions, #clearData {
+#editFooter input, #clearData, #optionsFooterButtons input {
   font-size: 1.2rem;
 }
 
