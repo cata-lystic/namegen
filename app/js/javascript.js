@@ -596,7 +596,7 @@ $(document).on("click", ".buttonTheme", function(e) {
   localStorage.buttonTheme = theme
 
   // This is everything that should be themed
-  var themeThese = $(".generate, input.editButtons, #defaultOptions, #clearData, #takeScreenshotMain, #takeScreenshotFooter, #helpScreenshotOK, #footer, #screenshots, #editInfo")
+  var themeThese = $(".generate, input.editButtons, #takeScreenshotMain, #takeScreenshotFooter, #helpScreenshotOK, #footer, #screenshots, #editInfo")
 
   if (theme == "Dark") {
 

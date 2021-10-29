@@ -96,7 +96,7 @@
           <p id="opTextShadowsInputs" style="display: none"><p>Hor: <input id="opShadowH" type="number" value="3" /> Vert: <input id="opShadowV" type="number" value="3" /> Blur: <input id="opShadowBlur" type="number" min="0" value="5" /> Color: <input id="opShadowColor" class="spectrum" type="text" value="#4d4d4d" /></p>
         </div>
 
-        <p>Background: <input type="button" id="opBgUpload" value="Upload" /> URL: <input type="text" id="opBackgroundURL" value="background.jpg" style="width: 40%" /> <input type="button" id="opBackgroundChange" value="&check;" /> <input type="button" id="opBackgroundReset" value="&#x2717;" /></p>
+        <p><span class="d-none d-lg-inline">Background:</span><span class="d-inline d-lg-none">BG:</span> <input type="button" id="opBgUpload" value="Upload" /> URL: <input type="text" id="opBackgroundURL" value="background.jpg" style="width: 40%" /> <input type="button" id="opBackgroundChange" value="&check;" /> <input type="button" id="opBackgroundReset" value="&#x2717;" /></p>
         <input id="opBgUploadForm" type="file" onchange="encodeImageFileAsURL(this)" hidden />
 
         <p>Buttons: <label><input id="opDark" type="radio" name="opButtonTheme" value="Dark" class="buttonTheme" /> Dark</label> <label><input id="opLight" type="radio" name="opButtonTheme" value="Light" class="buttonTheme" />  Light</label> <label><input type="checkbox" id="opButtonSmall" value="1" /> Small</label></p>
