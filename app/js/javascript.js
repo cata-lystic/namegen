@@ -781,7 +781,7 @@ $(document).on("click", ".takeScreenshot", function(e) {
   // For Mobile users the icons and buttons on the screen will disappear for a period of time, giving the user time to take a screenshot with their phone.
 
   // These are the elements to hide for all users
-  var hideThese = $("#mainButtons,#footer, #screenshots, #options, #ssNone, #editFooter")
+  var hideThese = $("#mainButtons,#footer, #screenshots, #options, #ssNone, #editFooter, #headerBox")
 
   // Check if user is on Desktop or Mobile
   if (getWidth() < 1024) { // If Mobile

@@ -7,6 +7,7 @@ body, html {
   max-height: 100%;
   max-width: 100%;
   overflow: hidden;
+  overflow-y: scroll;
   display: grid;
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
 }
@@ -330,6 +331,8 @@ input.lightTheme:hover, #takeScreenshot.lightTheme:hover, #takeScreenshotFooter.
 .goldLink {
   color: #f4d84a !important;
 }
+
+
 
 textarea {
   border-radius: 5px;
