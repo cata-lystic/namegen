@@ -3,9 +3,11 @@ version = "1.6"
 // Defaults class
 wordDefaults = {
 
+  headerTitle: "Namegen", // Can be HTML and as long as you want
+  headerFontSize: "2rem", // 2rem is default
+  headerType: "bubble", // bar or bubble. bar goes across the entire top. bubble is only 20% of the screen and rounded.
+  
   // Default words are currently based on previous Ubuntu version names. Note: I'm not affiliated with them at all.
-  headerTitle: "Namegen",
-  headerFontSize: "2rem",
   words: [ "Breezy\nDapper\nEdgy\nGutsy\nLucid\nPrecise\nTrusty\nCosmic", "Hedgehog\nFawn\nKoala\nLynx\nOcelot\nSalamander\nGorilla\nHippo" ],
   font: "Arial, Helvetica, Sans-Serif", // default font
   fontColor: "#000000",
@@ -114,6 +116,19 @@ $("document").ready(function() {
     $("#headerBox").html(wordDefaults.headerTitle)
     $("#headerBox").show();
     $("#headerBox").css("font-size", wordDefaults.headerFontSize)
+  }
+
+  // Check if header type is bar or bubble
+  if (wordDefaults.headerType == "bubble") {
+
+    // Turn into bubble
+    $("#headerBox").addClass("headerBubble")
+
+
+  } else {
+
+    $("#headerBox").removeClass("headerBubble")
+
   }
 
   // Load the defaults into the edit boxes.

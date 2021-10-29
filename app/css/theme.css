@@ -305,6 +305,14 @@ input.lightTheme:hover, #takeScreenshot.lightTheme:hover, #takeScreenshotFooter.
   text-align: center;
 }
 
+/* 'bubble' option for headerType in javascript.js*/
+.headerBubble {
+  width: 20% !important;
+  top: 3% !important;
+  left: 40% !important;
+  border-radius: 8px !important;
+}
+
 /* Larger screens get smaller 'footer' */
 @media only screen and (min-width: 1024px) {
 
@@ -343,7 +351,7 @@ input.lightTheme:hover, #takeScreenshot.lightTheme:hover, #takeScreenshotFooter.
   background: rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   width: auto;
-  padding: 5px 10px;
+  padding: 2px 6px;
   color: #eeeeee;
 }
 
