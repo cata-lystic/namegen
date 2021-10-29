@@ -1,8 +1,12 @@
-version = "1.5" // The Words Update
+version = "1.6"
 
 // Defaults class
 wordDefaults = {
 
+  headerTitle: "Namegen", // Can be HTML and as long as you want
+  headerFontSize: "2rem", // 2rem is default
+  headerType: "bubble", // bar or bubble. bar goes across the entire top. bubble is only 20% of the screen and rounded.
+  
   // Default words are currently based on previous Ubuntu version names. Note: I'm not affiliated with them at all.
   words: [ "Breezy\nDapper\nEdgy\nGutsy\nLucid\nPrecise\nTrusty\nCosmic", "Hedgehog\nFawn\nKoala\nLynx\nOcelot\nSalamander\nGorilla\nHippo" ],
   font: "Arial, Helvetica, Sans-Serif", // default font
@@ -13,7 +17,6 @@ wordDefaults = {
   shadowBlur: "5",
   shadowColor: "#4d4d4d",
   shadowEnabled: "1",
-
   backgroundURL: "app/img/background.jpg", // Can be external URL
   backgroundIsURL: 1, // 1 if background is a URL. 0 if it becomes a Hash (on file upload)
   buttonTheme: "Dark", // Dark or Light
@@ -108,6 +111,25 @@ wordDefaults = {
 // Do this on startup
 $("document").ready(function() {
 
+  // Page Header Title and font size
+  if (wordDefaults.headerTitle != "") {
+    $("#headerBox").html(wordDefaults.headerTitle)
+    $("#headerBox").show();
+    $("#headerBox").css("font-size", wordDefaults.headerFontSize)
+  }
+
+  // Check if header type is bar or bubble
+  if (wordDefaults.headerType == "bubble") {
+
+    // Turn into bubble
+    $("#headerBox").addClass("headerBubble")
+
+
+  } else {
+
+    $("#headerBox").removeClass("headerBubble")
+
+  }
 
   // Load the defaults into the edit boxes.
   if (!localStorage.words) {
@@ -458,11 +480,26 @@ $(document).on("change", "#opFontSize", function(e) {
   var fontSize = parseInt($(this).val())
 
   // If font size is not a number, reset to last working number
-  if (!isNumber(fontSize)) {
+  if (!isNumber(fontSize) || fontSize < 1) {
     $("#opFontSize").val(localStorage.fontSize)
   } else {
     $("#generatedName").css({"font-size": fontSize+"px"})
     localStorage.fontSize = fontSize
+  }
+
+})
+
+// Change generated word max width
+$(document).on("change", "#opFontWidth", function(e) {
+
+  var fontWidth = parseInt($(this).val())
+
+  // If font size is not a number, reset to last working number
+  if (!isNumber(fontWidth) || fontWidth < 20 || fontWidth > 100) {
+    $("#opFontWidth").val(localStorage.fontWidth)
+  } else {
+    $("#generatedName").css({"width": fontWidth+"%"})
+    localStorage.fontWidth = fontWidth
   }
 
 })
@@ -496,11 +533,11 @@ $(document).on("click", "#opShadowEnabled", function(e) {
   // Check if shadows were enabled or disabled
   if ( $(this).prop("checked") == true ) {
     $("#opTextShadows input").trigger("change") // "Change" an input so it loads the default text shadow
-    $("#opTextShadowsInputs").slideDown()
+    $("#opTextShadows").slideDown()
     localStorage.shadowEnabled = "1"
   } else {
     $("#generatedName").css({"text-shadow": ""})
-    $("#opTextShadowsInputs").slideUp()
+    $("#opTextShadows").slideUp()
     localStorage.shadowEnabled = "0"
   }
 
@@ -574,7 +611,7 @@ $(document).on("click", ".buttonTheme", function(e) {
   localStorage.buttonTheme = theme
 
   // This is everything that should be themed
-  var themeThese = $(".generate, input.editButtons, #defaultOptions, #clearData, #takeScreenshotMain, #takeScreenshotFooter, #helpScreenshotOK, #footer, #screenshots, #editInfo")
+  var themeThese = $(".generate, input.editButtons, #takeScreenshotMain, #takeScreenshotFooter, #helpScreenshotOK, #footer, #screenshots, #editInfo")
 
   if (theme == "Dark") {
 
@@ -642,6 +679,20 @@ $(document).on("change", "#opScreenshotTime", function(e) {
   }
 
 })
+
+
+// Preview button
+$(document).on("click", "#previewScreen", function(e) {
+
+  $("#options").css("opacity", "0.1")
+  setTimeout("previewReturn()", 4000)
+
+})
+
+function previewReturn() {
+  $("#options").css("opacity", "1")
+}
+
 
 // Reset options to default
 $(document).on("click", "#defaultOptions", function(e) {
@@ -745,7 +796,7 @@ $(document).on("click", ".takeScreenshot", function(e) {
   // For Mobile users the icons and buttons on the screen will disappear for a period of time, giving the user time to take a screenshot with their phone.
 
   // These are the elements to hide for all users
-  var hideThese = $("#mainButtons,#footer, #screenshots, #options, #ssNone, #editFooter")
+  var hideThese = $("#mainButtons,#footer, #screenshots, #options, #ssNone, #editFooter, #headerBox")
 
   // Check if user is on Desktop or Mobile
   if (getWidth() < 1024) { // If Mobile

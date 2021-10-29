@@ -1,11 +1,16 @@
 html {
   background-image: url("../img/background.jpg");
+  background-size: cover;
 }
 
 body, html {
   height: 100%;
   max-height: 100%;
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
   overflow: hidden;
+  overflow-y: auto;
   display: grid;
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
 }
@@ -18,15 +23,15 @@ width: 100%;
 }
 
 #options {
-  width: 90%;
+  width: 100%;
   position: absolute;
   z-index: 99;
-  top: 5%;
-  left: 5%;
-  background: rgba(123, 141, 150, 0.9);
+  top: 0%;
+  left: 0%;
+  background: rgba(123, 141, 150, 0.97);
   border-radius: 10px;
   color: #eeeeee;
-  transition: opacity 0.8s;
+  transition: opacity 0.6s;
 }
 
 /* Larger screens get smaller options box */
@@ -41,13 +46,18 @@ width: 100%;
 @media only screen and (min-width: 1024px) {
   #options {
       width: 25%;
-      top: 3%;
+      top: 2%;
       left: 2%;
   }
 }
 
 #optionsContainer {
-  margin: 10px;
+  margin: 0 10px;
+}
+
+#optionsContainer h1 {
+  padding: 0px;
+  margin: 5px 0px;
 }
 
 #optionsClose, #ssClose {
@@ -66,6 +76,18 @@ width: 100%;
   padding-right: 2%;
 }
 
+#opTextShadows {
+  padding: 0px !important;
+  margin: 0px !important;
+}
+
+#opTextShadowsInputs {
+  padding: 0px !important;
+  margin: 0px !important;
+}
+
+
+
 input[type='number'] {
   width: 35px;
   padding: 5px 5px !important;
@@ -79,7 +101,7 @@ input, select {
 }
 input:hover, select:hover {
   background: rgba(255, 255, 255, 0.5);
-  transition: background 0.6s;
+  transition: background 0.5s;
 }
 
 #screenshots {
@@ -89,7 +111,7 @@ input:hover, select:hover {
   left: 0;
   height: 100%;
   width: 100%;
-  background: rgba(0, 0, 0, 0.50);
+  background: rgba(0, 0, 0, 0.65);
   color: #FFFFFF;
   padding: 0px 2%;
   overflow-y: scroll;
@@ -104,7 +126,7 @@ input:hover, select:hover {
 }
 
 #screenshotsButton {
-  transition: background 2.0s !important;
+  transition: background 1.8s !important;
 }
 
 
@@ -112,6 +134,7 @@ input:hover, select:hover {
 .ssButtonNew {
   background: #d0bc06 !important;
 }
+
 
 canvas {
   max-width: 100%;
@@ -127,7 +150,7 @@ canvas {
 }
 
 
-/* Smalelr  screens never get screenshots box button */
+/* Smaller  screens never get screenshots box button */
 @media only screen and (max-width: 1024px) {
   #screenshotsButton {
     display: none !important;
@@ -157,14 +180,38 @@ canvas {
   #opMobileSS {
     display: none;
   }
+
+  .d-none, .d-lg-none {
+    display: none !important;
+  }
+
+  .d-lg-inline {
+    display: inline !important;
+  }
+
+}
+
+/* Small screens only */
+@media only screen and (max-width: 1024px) {
+
+  .d-lg-none, .d-none {
+    display: none !important;
+  }
+
+  .d-inline {
+    display: inline !important;
+  }
+
+
+
 }
 
 /* Larger screens get larger font */
 /*
 @media only screen and (min-width: 1024px) { #generatedName { font-size: 6rem; } } */
 
-.generate, input.editButtons, #defaultOptions, #clearData, #takeScreenshotMain, #takeScreenshotFooter, #helpScreenshotOK, .addRemove {
-  margin-top: 30px;
+.generate, input.editButtons, #optionsFooterButtons input, #clearData, #takeScreenshotMain, #takeScreenshotFooter, #helpScreenshotOK, .addRemove {
+  margin-top: 5px;
   font-size: 1.6rem;
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
   cursor: pointer;
@@ -172,7 +219,7 @@ canvas {
   border-radius: 10px;
   border: none;
   padding: 2px 6px !important;
-  transition: background 0.6s;
+  transition: background 0.5s;
   color: #eeeeee;
 }
 
@@ -195,15 +242,15 @@ canvas {
   cursor: pointer;
 }
 
-.generate:hover, input.editButtons:hover, #defaultOptions:hover, #clearData:hover, helpScreenshotOK:hover, .addRemove:hover {
+.generate:hover, input.editButtons:hover, #optionsFooterButtons input:hover, #clearData:hover, helpScreenshotOK:hover, .addRemove:hover {
   background: rgba(0, 0, 0, 0.5);
 }
 
-#defaultOptions, #clearData {
+#clearData, #optionsFooterButtons input {
   background: rgba(0, 0, 0, 0.3);
 }
 
-#defaultOptions:hover, #clearData:hover {
+#clearData:hover, #optionsFooterButtons input:hover {
   background: rgba(0, 0, 0, 0.5);
 }
 
@@ -235,13 +282,51 @@ input.lightTheme:hover, #takeScreenshot.lightTheme:hover, #takeScreenshotFooter.
   top: 0;
   border-bottom: 1px solid #000000;
   position: absolute;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.65);
   color: #ffffff;
+  z-index: 120;
 }
 
 #helpScreenshotNotif {
   padding: 2%;
 }
+
+
+#headerBox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  font-size: 1.5rem;
+  background: rgba(123, 141, 150, 0.8);
+  padding: 5px 0px;
+  margin: 0;
+  color: #eeeeee;
+  text-align: center;
+}
+
+/* 'bubble' option for headerType in javascript.js*/
+.headerBubble {
+  width: 20% !important;
+  top: 3% !important;
+  left: 40% !important;
+  border-radius: 8px !important;
+}
+
+/* Larger screens get smaller 'footer' */
+@media only screen and (min-width: 1024px) {
+
+  #headerBox a {
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  #headerBox a:hover {
+    text-decoration: underline;
+  }
+
+}
+
 
 #editFooter {
   position: absolute;
@@ -254,7 +339,7 @@ input.lightTheme:hover, #takeScreenshot.lightTheme:hover, #takeScreenshotFooter.
   color: #212121;
 }
 
-#editFooter input, #defaultOptions, #clearData {
+#editFooter input, #clearData, #optionsFooterButtons input {
   font-size: 1.2rem;
 }
 
@@ -266,7 +351,7 @@ input.lightTheme:hover, #takeScreenshot.lightTheme:hover, #takeScreenshotFooter.
   background: rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   width: auto;
-  padding: 5px 10px;
+  padding: 2px 6px;
   color: #eeeeee;
 }
 
@@ -282,6 +367,8 @@ input.lightTheme:hover, #takeScreenshot.lightTheme:hover, #takeScreenshotFooter.
 .goldLink {
   color: #f4d84a !important;
 }
+
+
 
 textarea {
   border-radius: 5px;

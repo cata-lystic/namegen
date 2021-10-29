@@ -2,7 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="viewport" content= "width=device-width, user-scalable=no">
     <meta name="description" content="Generate a name using your own words. If that makes sense.">
     <meta name="author" content="Cata Lystic">
 
@@ -82,7 +83,7 @@
 
         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp<label><input id="opBold" type="checkbox" class="fontDecoration" value="1" /> Bold</label>&nbsp;&nbsp;<label><input id="opItalic" type="checkbox" class="fontDecoration" value="1" /> Italic</label>&nbsp;&nbsp;<label><input id="opUnderline" type="checkbox" class="fontDecoration" value="1" /> Underline</label>
 
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size: <input id="opFontSize" type="number" value="68" min="1" step="1" style="width: 45px" class="" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Color: <input id="opFontColor" type="text" class="spectrum" /></p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size: <input id="opFontSize" type="number" value="68" min="1" step="1" style="width: 45px" class="" />&nbsp;&nbsp;&nbsp;Color: <input id="opFontColor" type="text" class="spectrum" />&nbsp;&nbsp;Width: <input id="opFontWidth" type="number" value="100" min="20" max="100" step="5" style="width: 45px" class="" /></p>
 
         <p>Rotation: <input id="opRotateZ" type="number" value="0" step="10" style="width: 45px" class="textTransform" /> Z &nbsp;&nbsp;<input id="opRotateX" type="number" value="0" step="10" style="width: 45px" class="textTransform" /> X &nbsp;&nbsp;<input id="opRotateY" type="number" value="0" step="10" style="width: 45px" class="textTransform" /> Y</p>
 
@@ -95,20 +96,26 @@
           <p id="opTextShadowsInputs" style="display: none"><p>Hor: <input id="opShadowH" type="number" value="3" /> Vert: <input id="opShadowV" type="number" value="3" /> Blur: <input id="opShadowBlur" type="number" min="0" value="5" /> Color: <input id="opShadowColor" class="spectrum" type="text" value="#4d4d4d" /></p>
         </div>
 
-        <p>Background: <input type="button" id="opBgUpload" value="Upload" /> URL: <input type="text" id="opBackgroundURL" value="background.jpg" style="width: 40%" /> <input type="button" id="opBackgroundChange" value="&check;" /> <input type="button" id="opBackgroundReset" value="&#x2717;" /></p>
+        <p><span class="d-none d-lg-inline">Background:</span><span class="d-inline d-lg-none">BG:</span> <input type="button" id="opBgUpload" value="Upload" /> URL: <input type="text" id="opBackgroundURL" value="background.jpg" style="width: 40%" /> <input type="button" id="opBackgroundChange" value="&check;" /> <input type="button" id="opBackgroundReset" value="&#x2717;" /></p>
         <input id="opBgUploadForm" type="file" onchange="encodeImageFileAsURL(this)" hidden />
 
         <p>Buttons: <label><input id="opDark" type="radio" name="opButtonTheme" value="Dark" class="buttonTheme" /> Dark</label> <label><input id="opLight" type="radio" name="opButtonTheme" value="Light" class="buttonTheme" />  Light</label> <label><input type="checkbox" id="opButtonSmall" value="1" /> Small</label></p>
 
         <p id="opMobileSS"><img src="app/img/phonew.png" class="phoneIcon" height="18" title="Mobile Only" /> Screenshot Time: <input id="opScreenshotTime" type="number" value="5" step="1" min="1" max="30" style="width: 45px" class="" /> seconds</p>
 
-        <p><input id="defaultOptions" type="button" value="Reset to Defaults" /> <input id="clearData" type="button" value="Clear Data" /></p>
+        <p id="optionsFooterButtons"><input id="defaultOptions" type="button" value="Reset to Defaults" /> <input id="clearData" type="button" value="Clear Data" /> <input id="previewScreen" type="button" value="Preview" /></p>
 
       </div>
 
     </div>
 
+
     <div id="center">
+
+      <!-- Header Title -->
+      <div id="headerBox" style="display: none">
+        &nbsp;
+      </div>
 
       <!-- Main box. Shows generated name -->
       <span id="generatedName"></span>
