@@ -518,11 +518,11 @@ $(document).on("click", "#opShadowEnabled", function(e) {
   // Check if shadows were enabled or disabled
   if ( $(this).prop("checked") == true ) {
     $("#opTextShadows input").trigger("change") // "Change" an input so it loads the default text shadow
-    $("#opTextShadowsInputs").slideDown()
+    $("#opTextShadows").slideDown()
     localStorage.shadowEnabled = "1"
   } else {
     $("#generatedName").css({"text-shadow": ""})
-    $("#opTextShadowsInputs").slideUp()
+    $("#opTextShadows").slideUp()
     localStorage.shadowEnabled = "0"
   }
 

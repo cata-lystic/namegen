@@ -19,12 +19,12 @@ width: 100%;
 }
 
 #options {
-  width: 90%;
+  width: 100%;
   position: absolute;
   z-index: 99;
-  top: 5%;
-  left: 5%;
-  background: rgba(123, 141, 150, 0.9);
+  top: 0%;
+  left: 0%;
+  background: rgba(123, 141, 150, 0.97);
   border-radius: 10px;
   color: #eeeeee;
   transition: opacity 0.8s;
@@ -42,13 +42,18 @@ width: 100%;
 @media only screen and (min-width: 1024px) {
   #options {
       width: 25%;
-      top: 3%;
+      top: 2%;
       left: 2%;
   }
 }
 
 #optionsContainer {
-  margin: 10px;
+  margin: 0 10px;
+}
+
+#optionsContainer h1 {
+  padding: 0px;
+  margin: 5px 0px;
 }
 
 #optionsClose, #ssClose {
@@ -65,6 +70,16 @@ width: 100%;
 
 #optionsClose {
   padding-right: 2%;
+}
+
+#opTextShadows {
+  padding: 0px !important;
+  margin: 0px !important;
+}
+
+#opTextShadowsInputs {
+  padding: 0px !important;
+  margin: 0px !important;
 }
 
 input[type='number'] {
