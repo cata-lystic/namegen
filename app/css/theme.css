@@ -307,9 +307,9 @@ input.lightTheme:hover, #takeScreenshot.lightTheme:hover, #takeScreenshotFooter.
 
 /* 'bubble' option for headerType in javascript.js*/
 .headerBubble {
-  width: 20% !important;
+  width: 70% !important;
   top: 3% !important;
-  left: 40% !important;
+  left: 15% !important;
   border-radius: 8px !important;
 }
 
@@ -323,6 +323,11 @@ input.lightTheme:hover, #takeScreenshot.lightTheme:hover, #takeScreenshotFooter.
 
   #headerBox a:hover {
     text-decoration: underline;
+  }
+
+  .headerBubble {
+     width: 40% !important;
+     left: 30% !important;
   }
 
 }
