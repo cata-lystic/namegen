@@ -4,6 +4,8 @@ version = "1.6"
 wordDefaults = {
 
   // Default words are currently based on previous Ubuntu version names. Note: I'm not affiliated with them at all.
+  headerTitle: "Namegen",
+  headerFontSize: "2rem",
   words: [ "Breezy\nDapper\nEdgy\nGutsy\nLucid\nPrecise\nTrusty\nCosmic", "Hedgehog\nFawn\nKoala\nLynx\nOcelot\nSalamander\nGorilla\nHippo" ],
   font: "Arial, Helvetica, Sans-Serif", // default font
   fontColor: "#000000",
@@ -107,6 +109,12 @@ wordDefaults = {
 // Do this on startup
 $("document").ready(function() {
 
+  // Page Header Title and font size
+  if (wordDefaults.headerTitle != "") {
+    $("#headerBox").html(wordDefaults.headerTitle)
+    $("#headerBox").show();
+    $("#headerBox").css("font-size", wordDefaults.headerFontSize)
+  }
 
   // Load the defaults into the edit boxes.
   if (!localStorage.words) {
