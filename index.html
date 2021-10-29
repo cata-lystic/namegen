@@ -83,7 +83,7 @@
 
         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp<label><input id="opBold" type="checkbox" class="fontDecoration" value="1" /> Bold</label>&nbsp;&nbsp;<label><input id="opItalic" type="checkbox" class="fontDecoration" value="1" /> Italic</label>&nbsp;&nbsp;<label><input id="opUnderline" type="checkbox" class="fontDecoration" value="1" /> Underline</label>
 
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size: <input id="opFontSize" type="number" value="68" min="1" step="1" style="width: 45px" class="" />&nbsp;&nbsp;&nbsp;Color: <input id="opFontColor" type="text" class="spectrum" />&nbsp;&nbsp;Width: <input id="opFontWidth" type="number" value="100" min="20" max="100" step="5" style="width: 45px" class="" /></p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size: <input id="opFontSize" type="number" value="68" min="1" step="1" style="width: 45px" class="" />&nbsp;&nbsp;&nbsp;Color: <input id="opFontColor" type="color" class="spectrum" />&nbsp;&nbsp;Width: <input id="opFontWidth" type="number" value="100" min="20" max="100" step="5" style="width: 45px" class="" /></p>
 
         <p>Rotation: <input id="opRotateZ" type="number" value="0" step="10" style="width: 45px" class="textTransform" /> Z &nbsp;&nbsp;<input id="opRotateX" type="number" value="0" step="10" style="width: 45px" class="textTransform" /> X &nbsp;&nbsp;<input id="opRotateY" type="number" value="0" step="10" style="width: 45px" class="textTransform" /> Y</p>
 
@@ -91,9 +91,12 @@
 
         <p>Position: <input id="opPosX" type="number" value="0" step="10" style="width: 45px" class="textTransform" /> X &nbsp;&nbsp;<input id="opPosY" type="number" value="0" step="10" style="width: 45px" class="textTransform" /> Y</p>
 
-        <p>Shadow: <label for="opShadowEnabled"><input id="opShadowEnabled" type="checkbox" value="1" /> Enabled</label></p>
+        <p>Outline: <label for="opShadowEnabled"><input id="opShadowEnabled" name="opOutline" type="radio" value="shadow" /> Shadow</label> <label for="opExplodeEnabled"><input id="opExplodeEnabled" name="opOutline" type="radio" value="explode" /> Explode</label> | <label for="opOutlineColor">Color: <input id="opOutlineColor" class="spectrum" type="color" value="" /><input type="hidden" id="opOutlineColorTemp" value="" /></label></p>
         <div id="opTextShadows">
-          <p id="opTextShadowsInputs" style="display: none"><p>Hor: <input id="opShadowH" type="number" value="3" /> Vert: <input id="opShadowV" type="number" value="3" /> Blur: <input id="opShadowBlur" type="number" min="0" value="5" /> Color: <input id="opShadowColor" class="spectrum" type="text" value="#4d4d4d" /></p>
+          <p id="opTextShadowsInputs" style="display: none"><p>Hor: <input id="opShadowH" type="number" value="3" /> Vert: <input id="opShadowV" type="number" value="3" /> Blur: <input id="opShadowBlur" type="number" min="0" value="5" /></p>
+        </div>
+        <div id="opTextExplode" style="display: none">
+          <p id="opTextExplodeInputs" style="display: none"><p>Explode Width: <input id="opExplodeWidth" type="number" value="2" /> pixels</p>
         </div>
 
         <p><span class="d-none d-lg-inline">Background:</span><span class="d-inline d-lg-none">BG:</span> <input type="button" id="opBgUpload" value="Upload" /> URL: <input type="text" id="opBackgroundURL" value="background.jpg" style="width: 40%" /> <input type="button" id="opBackgroundChange" value="&check;" /> <input type="button" id="opBackgroundReset" value="&#x2717;" /></p>
@@ -103,7 +106,7 @@
 
         <p id="opMobileSS"><img src="app/img/phonew.png" class="phoneIcon" height="18" title="Mobile Only" /> Screenshot Time: <input id="opScreenshotTime" type="number" value="5" step="1" min="1" max="30" style="width: 45px" class="" /> seconds</p>
 
-        <p id="optionsFooterButtons"><input id="defaultOptions" type="button" value="Reset to Defaults" /> <input id="clearData" type="button" value="Clear Data" /> <input id="previewScreen" type="button" value="Preview" /></p>
+        <p id="optionsFooterButtons"><input id="defaultOptions" type="button" value="Reset" /> <input id="clearData" type="button" value="Clear Data" /> <input id="previewScreen" type="button" value="Preview" /> <input id="" type="button" value="Close" class="optionsButton" /></p>
 
       </div>
 

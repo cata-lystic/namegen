@@ -1,12 +1,10 @@
-version = "1.6"
-
-// Defaults class
+// Defaults
 wordDefaults = {
 
   headerTitle: "Namegen", // Can be HTML and as long as you want
   headerFontSize: "2rem", // 2rem is default
   headerType: "bubble", // bar or bubble. bar goes across the entire top. bubble is only 20% of the screen and rounded.
-  
+
   // Default words are currently based on previous Ubuntu version names. Note: I'm not affiliated with them at all.
   words: [ "Breezy\nDapper\nEdgy\nGutsy\nLucid\nPrecise\nTrusty\nCosmic", "Hedgehog\nFawn\nKoala\nLynx\nOcelot\nSalamander\nGorilla\nHippo" ],
   font: "Arial, Helvetica, Sans-Serif", // default font
@@ -15,8 +13,10 @@ wordDefaults = {
   shadowH: "3",
   shadowV: "3",
   shadowBlur: "5",
-  shadowColor: "#4d4d4d",
+  outlineColor: "#4d4d4d",
   shadowEnabled: "1",
+  outline: "shadow", // "shadow" or "explode"
+  explodeWidth: "2", // Explode width. First few pixels give it a stroke effect, the rest fly away from word
   backgroundURL: "app/img/background.jpg", // Can be external URL
   backgroundIsURL: 1, // 1 if background is a URL. 0 if it becomes a Hash (on file upload)
   buttonTheme: "Dark", // Dark or Light
@@ -30,6 +30,9 @@ wordDefaults = {
   skewY:  0,
   posX:  0,
   posY:  0,
+
+  hideVersion: 1, // Hide Namegen version number at bottom right. 1 = true, 0 = false
+  namegenVersion: 1.7, // Namegen version. Changing this could have negative results.
 
   // Set localStorage back to defaults
   set: function(choice) {
@@ -50,17 +53,17 @@ wordDefaults = {
       localStorage.shadowH = this.shadowH
       localStorage.shadowV = this.shadowV
       localStorage.shadowBlur = this.shadowBlur
-      localStorage.shadowColor = this.shadowColor
-      localStorage.shadowEnabled = this.shadowEnabled
+      localStorage.outlineColor = this.outlineColor
+      localStorage.outline = this.outline
+      localStorage.explodeWidth = this.explodeWidth
 
       $("#generatedName").css({"font-family":this.font, "color" : this.fontColor})
-      if (this.shadowEnabled == "1") {
-        $("#generatedName").css({"text-shadow" : this.shadowH+"px "+this.shadowV+"px "+this.shadowBlur+"px "+this.shadowColor})
-        $("#opShadowEnabled").prop({"checked":"checked"})
+      if (this.outline == "shadow") {
+        $("#generatedName").css({"text-shadow" : this.shadowH+"px "+this.shadowV+"px "+this.shadowBlur+"px "+this.outlineColor})
         $("#opTextShadowsInputs").slideDown()
       } else {
-        $("#generatedName").css({"text-shadow" : ""})
-        $("#opShadowEnabled").prop({"checked":""})
+        // Text is "explode"
+        $("#generatedName").css({"text-shadow" : "-"+localStorage.explodeWidth+"px -"+localStorage.explodeWidth+"px 0 "+color+", "+localStorage.explodeWidth+"px -"+localStorage.explodeWidth+"px 0 "+color+", -"+localStorage.explodeWidth+"px "+localStorage.explodeWidth+"px 0 "+color+", "+localStorage.explodeWidth+"px "+localStorage.explodeWidth+"px 0 "+color})
         $("#opTextShadowsInputs").slideUp()
       }
       $("#opShadowH").val(this.shadowH)
@@ -69,7 +72,7 @@ wordDefaults = {
       $("#opFont").val(this.font)
       $("#opFontColor").spectrum({color: this.fontColor})
       $("#opFontSize").val(this.fontSize)
-      $("#opShadowColor").spectrum({color: this.shadowColor})
+      $("#opOutlineColor").spectrum({color: this.outlineColor})
       textDecoration(this.bold, this.italic, this.underline)
     }
 
@@ -110,6 +113,17 @@ wordDefaults = {
 
 // Do this on startup
 $("document").ready(function() {
+
+  // For 1.7 upgrade we need to give a default outline option if it hasn't been set
+  if (!localStorage.outline) {
+
+    localStorage.outline = "shadow"
+    localStorage.explodeWidth = "2"
+
+  }
+
+
+
 
   // Page Header Title and font size
   if (wordDefaults.headerTitle != "") {
@@ -177,9 +191,11 @@ $("document").ready(function() {
   $("#opShadowH").val(localStorage.shadowH)
   $("#opShadowV").val(localStorage.shadowV)
   $("#opShadowBlur").val(localStorage.shadowBlur)
+  $("#opExplodeWidth").val(localStorage.explodeWidth)
+  $("input[name='opOutline'][value=" + localStorage.outline + "]").prop('checked', true).trigger("change") // Select which radio Outline is set to
   $("#opFont").val(localStorage.font)
   $("#opFontColor").attr({"value": localStorage.fontColor})
-  $("#opShadowColor").attr({"value": localStorage.shadowColor})
+  $("#opOutlineColor").attr({"value": localStorage.outlineColor})
   $("#opFontSize").val(localStorage.fontSize)
   $("html").css({"background-image" : "url("+localStorage.backgroundURL+")"})
   if (localStorage.backgroundIsURL == 1) {
@@ -191,10 +207,13 @@ $("document").ready(function() {
 
 
   // Give text a shadow if enabled and show inputs
-  if (localStorage.shadowEnabled == "1") {
-    $("#generatedName").css({"text-shadow" : localStorage.shadowH+"px "+localStorage.shadowV+"px "+localStorage.shadowBlur+"px "+localStorage.shadowColor})
+  if (localStorage.outline == "shadow") {
+    $("#generatedName").css({"text-shadow" : localStorage.shadowH+"px "+localStorage.shadowV+"px "+localStorage.shadowBlur+"px "+localStorage.outlineColor})
     $("#opShadowEnabled").prop({"checked":"checked"})
     $("#opTextShadowsInputs").show()
+  } else {
+    // explode
+    $("#generatedName").css({"text-shadow" : "-"+localStorage.explodeWidth+"px -"+localStorage.explodeWidth+"px 0 "+localStorage.outlineColor+", "+localStorage.explodeWidth+"px -"+localStorage.explodeWidth+"px 0 "+localStorage.outlineColor+", -"+localStorage.explodeWidth+"px "+localStorage.explodeWidth+"px 0 "+localStorage.outlineColor+", "+localStorage.explodeWidth+"px "+localStorage.explodeWidth+"px 0 "+localStorage.outlineColor})
   }
 
 
@@ -202,12 +221,37 @@ $("document").ready(function() {
   generate()
 
   // Place the Namegen version on the footer
-  $("#namegenVersion").text(version)
+  $("#namegenVersion").text(wordDefaults.namegenVersion)
 
   // Create the Colorpickers in options
-  $(".spectrum").spectrum({
+  $("#opFontColor").spectrum({
     preferredFormat: "hex",
-    showInput: true
+    showButtons: false,
+    showInput: true,
+    showInitial: true,
+    move: function(color) {
+        localStorage.opFontColorTemp = color.toHexString()
+        updateText()
+    },
+    change: function(color) {
+      localStorage.opFontColorColorTemp = undefined
+      localStorage.opOutlineColor = color.toHexString() // Update to new color
+    }
+  });
+
+  $("#opOutlineColor").spectrum({
+    preferredFormat: "hex",
+    showButtons: false,
+    showInput: true,
+    showInitial: true,
+    move: function(color) {
+        localStorage.opOutlineColorTemp = color.toHexString()
+        updateText()
+    },
+    change: function(color) {
+      localStorage.opOutlineColorTemp = undefined
+      localStorage.opOutlineColor = color.toHexString() // Update to new color
+    }
   });
 
 })
@@ -470,6 +514,7 @@ $(document).on("change", "#opFontColor", function(e) {
 
   var fontColor = $(this).val()
   $("#generatedName").css({"color": fontColor})
+
   localStorage.fontColor = fontColor
 
 })
@@ -527,30 +572,51 @@ $(document).on("change", ".textTransform", function(e) {
 
 })
 
-// Toggle Text Shadow options when enabled/disabled
-$(document).on("click", "#opShadowEnabled", function(e) {
+// Toggle Text Shadow options when enabled/disabled and change outline text
+$(document).on("click, change", "input[name='opOutline']", function(e) {
 
-  // Check if shadows were enabled or disabled
-  if ( $(this).prop("checked") == true ) {
-    $("#opTextShadows input").trigger("change") // "Change" an input so it loads the default text shadow
-    $("#opTextShadows").slideDown()
-    localStorage.shadowEnabled = "1"
-  } else {
-    $("#generatedName").css({"text-shadow": ""})
-    $("#opTextShadows").slideUp()
-    localStorage.shadowEnabled = "0"
+  var outlineChoice = $(this).val() // Check which was chosen
+
+  // Outline has to be "shadow" or "explode"
+  if (outlineChoice != "shadow" && outlineChoice != "explode") {
+    return false
   }
+
+  if (outlineChoice == "shadow") {
+
+    $("#opTextShadows input").trigger("change") // "Change" an input so it loads the default text shadow
+    $("#opTextShadows").show()
+    $("#opTextExplode").hide()
+
+  } else {
+
+    // Explode is the only other option for now
+    $("#generatedName").css({"text-shadow": ""})
+    $("#opTextShadows").hide()
+    $("#opTextExplode").show()
+
+
+  }
+
+  $("#opTextShadows input").trigger("change") // Pretend like options changed so it updates the text
+
+  localStorage.outline = outlineChoice
 
 })
 
-// Change text shadow
-$("#opTextShadows").on("change", "input", function(e) {
+
+// Change text shadow and stroke
+$("#opTextShadows,#opTextExplode").on("change", "input", function(e) {
 
   // Grab the selected inputs. Check to make sure they're numbers later ;)
   var shadowH = parseInt($("#opShadowH").val())
   var shadowV = parseInt($("#opShadowV").val())
   var blur = parseInt($("#opShadowBlur").val())
-  var color = $("#opShadowColor").val()
+  var color = $("#opOutlineColor").val()
+
+  var outline = $("input[name='opOutline']:checked").val()
+
+  var explodeWidth = parseInt($("#opExplodeWidth").val())
 
   // If any aren't a number, reset to last working number
   if (!isNumber(shadowH)) {
@@ -561,19 +627,64 @@ $("#opTextShadows").on("change", "input", function(e) {
     $("#opShadowV").val(localStorage.shadowV)
   }
 
+  if (!isNumber(shadowV)) {
+    $("#opExplodeWidth").val(localStorage.explodeWidth)
+  }
+
   if (!isNumber(blur) || blur < 0) {
     $("#opShadowBlur").val(localStorage.shadowBlur)
   }
-
-  $("#generatedName").css({"text-shadow" : localStorage.shadowH+"px "+localStorage.shadowV+"px "+localStorage.shadowBlur+"px "+color})
 
   // Save settings
   localStorage.shadowH = shadowH
   localStorage.shadowV = shadowV
   localStorage.shadowBlur = blur
-  localStorage.shadowColor = color
+  localStorage.outlineColor = color
+  localStorage.outline = outline
+  localStorage.explodeWidth = explodeWidth
+
+  // Update the text with the new choices
+  updateText()
 
 })
+
+
+
+// Update the text with the new choices
+function updateText() {
+
+  // If there is a temporary color, use that instead
+  if (localStorage.opOutlineColorTemp != undefined) {
+    var outlineColor = localStorage.opOutlineColorTemp
+  } else {
+    var outlineColor = localStorage.opOutlineColor
+  }
+
+  if (localStorage.opFontColorTemp != undefined) {
+    var fontColor = localStorage.opFontColorTemp
+  } else {
+    var fontColor = localStorage.opFontColor
+  }
+
+  if (localStorage.outline == "shadow") {
+
+    $("#generatedName").css({
+      "color" : fontColor,
+      "text-shadow" : localStorage.shadowH+"px "+localStorage.shadowV+"px "+localStorage.shadowBlur+"px "+outlineColor})
+
+  } else {
+
+    // Explode
+    $("#generatedName").css({
+      "color" : fontColor,
+      "text-shadow" : "-"+localStorage.explodeWidth+"px -"+localStorage.explodeWidth+"px 0 "+outlineColor+", "+localStorage.explodeWidth+"px -"+localStorage.explodeWidth+"px 0 "+outlineColor+", -"+localStorage.explodeWidth+"px "+localStorage.explodeWidth+"px 0 "+outlineColor+", "+localStorage.explodeWidth+"px "+localStorage.explodeWidth+"px 0 "+outlineColor})
+
+  }
+
+}
+
+
+
 
 // Change background
 $(document).on("click", "#opBackgroundChange", function(e) {
@@ -686,6 +797,7 @@ $(document).on("click", "#previewScreen", function(e) {
 
   $("#options").css("opacity", "0.1")
   setTimeout("previewReturn()", 4000)
+  window.scrollTo(0, 0); // Scroll to top of page
 
 })
 
