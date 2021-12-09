@@ -2,14 +2,14 @@
 wordDefaults = {
 
   headerTitle: "Namegen", // Can be HTML and as long as you want
-  headerFontSize: "2rem", // 2rem is default
+  headerFontSize: "2.0", // Font size is in EM units. 2.0 rem is default
   headerType: "bubble", // bar or bubble. bar goes across the entire top. bubble is only 20% of the screen and rounded.
 
   // Default words are currently based on previous Ubuntu version names. Note: I'm not affiliated with them at all.
   words: [ "Breezy\nDapper\nEdgy\nGutsy\nLucid\nPrecise\nTrusty\nCosmic", "Hedgehog\nFawn\nKoala\nLynx\nOcelot\nSalamander\nGorilla\nHippo" ],
   font: "Arial, Helvetica, Sans-Serif", // default font
   fontColor: "#000000",
-  fontSize: "68", /* currently in 'px' units */
+  fontSize: "4.0", // Font size is in EM units. 4.0 rem is default
   shadowH: "3",
   shadowV: "3",
   shadowBlur: "5",
@@ -129,7 +129,7 @@ $("document").ready(function() {
   if (wordDefaults.headerTitle != "") {
     $("#headerBox").html(wordDefaults.headerTitle)
     $("#headerBox").show();
-    $("#headerBox").css("font-size", wordDefaults.headerFontSize)
+    $("#headerBox").css("font-size", wordDefaults.headerFontSize+"rem")
   }
 
   // Check if header type is bar or bubble
@@ -229,13 +229,14 @@ $("document").ready(function() {
     showButtons: false,
     showInput: true,
     showInitial: true,
+    showPalette: true,
     move: function(color) {
-        localStorage.opFontColorTemp = color.toHexString()
+        localStorage.fontColor = color.toHexString()
         updateText()
     },
     change: function(color) {
-      localStorage.opFontColorColorTemp = undefined
-      localStorage.opOutlineColor = color.toHexString() // Update to new color
+      localStorage.fontColor = color.toHexString() // Update to new color
+      updateText()
     }
   });
 
@@ -244,13 +245,14 @@ $("document").ready(function() {
     showButtons: false,
     showInput: true,
     showInitial: true,
+    showPalette: true,
     move: function(color) {
-        localStorage.opOutlineColorTemp = color.toHexString()
-        updateText()
+      localStorage.outlineColor = color.toHexString()
+      updateText()
     },
     change: function(color) {
-      localStorage.opOutlineColorTemp = undefined
-      localStorage.opOutlineColor = color.toHexString() // Update to new color
+      localStorage.outlineColor = color.toHexString() // Update to new color
+      updateText()
     }
   });
 
@@ -522,13 +524,14 @@ $(document).on("change", "#opFontColor", function(e) {
 // Change font size
 $(document).on("change", "#opFontSize", function(e) {
 
-  var fontSize = parseInt($(this).val())
+  //var fontSize = parseInt($(this).val())
+  var fontSize = $(this).val()
 
   // If font size is not a number, reset to last working number
   if (!isNumber(fontSize) || fontSize < 1) {
     $("#opFontSize").val(localStorage.fontSize)
   } else {
-    $("#generatedName").css({"font-size": fontSize+"px"})
+    $("#generatedName").css({"font-size": fontSize+"em"})
     localStorage.fontSize = fontSize
   }
 
@@ -606,7 +609,7 @@ $(document).on("click, change", "input[name='opOutline']", function(e) {
 
 
 // Change text shadow and stroke
-$("#opTextShadows,#opTextExplode").on("change", "input", function(e) {
+$("#opTextShadows, #opTextExplode").on("change", "input", function(e) {
 
   // Grab the selected inputs. Check to make sure they're numbers later ;)
   var shadowH = parseInt($("#opShadowH").val())
@@ -654,17 +657,9 @@ $("#opTextShadows,#opTextExplode").on("change", "input", function(e) {
 function updateText() {
 
   // If there is a temporary color, use that instead
-  if (localStorage.opOutlineColorTemp != undefined) {
-    var outlineColor = localStorage.opOutlineColorTemp
-  } else {
-    var outlineColor = localStorage.opOutlineColor
-  }
+  var outlineColor = localStorage.outlineColor
 
-  if (localStorage.opFontColorTemp != undefined) {
-    var fontColor = localStorage.opFontColorTemp
-  } else {
-    var fontColor = localStorage.opFontColor
-  }
+  var fontColor = localStorage.fontColor
 
   if (localStorage.outline == "shadow") {
 

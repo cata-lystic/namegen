@@ -381,3 +381,11 @@ textarea {
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
   margin: 10px;
 }
+
+/* This is a fix for Spectrum.js where it wasn't fully on the page with first use with mobile. */
+@media only screen and (max-width: 576px) {
+  .sp-container {
+      right: 2px;
+      left: auto !important;
+  }
+}

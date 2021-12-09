@@ -1,3 +1,8 @@
+// Spectrum Colorpicker v1.8.1
+// https://github.com/bgrins/spectrum
+// Author: Brian Grinstead
+// License: MIT
+
 (function (factory) {
     "use strict";
 
@@ -24,44 +29,33 @@
 
         // Options
         color: false,
-        flat: false, // Deprecated - use type instead
-        type: '', // text, color, component or flat
+        flat: false,
         showInput: false,
-        allowEmpty: true,
+        allowEmpty: false,
         showButtons: true,
         clickoutFiresChange: true,
         showInitial: false,
-        showPalette: true,
+        showPalette: false,
         showPaletteOnly: false,
         hideAfterPaletteSelect: false,
         togglePaletteOnly: false,
         showSelectionPalette: true,
         localStorageKey: false,
         appendTo: "body",
-        maxSelectionSize: 8,
-        locale: "en",
+        maxSelectionSize: 7,
         cancelText: "cancel",
         chooseText: "choose",
         togglePaletteMoreText: "more",
         togglePaletteLessText: "less",
         clearText: "Clear Color Selection",
         noColorSelectedText: "No Color Selected",
-        preferredFormat: "name",
+        preferredFormat: false,
         className: "", // Deprecated - use containerClassName and replacerClassName instead.
         containerClassName: "",
         replacerClassName: "",
-        showAlpha: true,
+        showAlpha: false,
         theme: "sp-light",
-        palette: [
-            ["#000000","#444444","#5b5b5b","#999999","#bcbcbc","#eeeeee","#f3f6f4","#ffffff"],
-            ["#f44336","#744700","#ce7e00","#8fce00","#2986cc","#16537e","#6a329f","#c90076"],
-            ["#f4cccc","#fce5cd","#fff2cc","#d9ead3","#d0e0e3","#cfe2f3","#d9d2e9","#ead1dc"],
-            ["#ea9999","#f9cb9c","#ffe599","#b6d7a8","#a2c4c9","#9fc5e8","#b4a7d6","#d5a6bd"],
-            ["#e06666","#f6b26b","#ffd966","#93c47d","#76a5af","#6fa8dc","#8e7cc3","#c27ba0"],
-            ["#cc0000","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79"],
-            ["#990000","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47"],
-            ["#660000","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]
-        ],
+        palette: [["#ffffff", "#000000", "#ff0000", "#ff8000", "#ffff00", "#008000", "#0000ff", "#4b0082", "#9400d3"]],
         selectionPalette: [],
         disabled: false,
         offset: null
@@ -128,7 +122,7 @@
                     "</div>",
                     "<div class='sp-initial sp-thumb sp-cf'></div>",
                     "<div class='sp-button-container sp-cf'>",
-                        "<button class='sp-cancel' href='#'></button>",
+                        "<a class='sp-cancel' href='#'></a>",
                         "<button type='button' class='sp-choose'></button>",
                     "</div>",
                 "</div>",
@@ -148,7 +142,13 @@
                 var swatchStyle = rgbaSupport ? ("background-color:" + tiny.toRgbString()) : "filter:" + tiny.toFilter();
                 html.push('<span title="' + formattedString + '" data-color="' + tiny.toRgbString() + '" class="' + c + '"><span class="sp-thumb-inner" style="' + swatchStyle + ';"></span></span>');
             } else {
-                html.push('<span class="sp-thumb-el sp-clear-display" ><span class="sp-clear-palette-only" style="background-color: transparent;"></span></span>');
+                var cls = 'sp-clear-display';
+                html.push($('<div />')
+                    .append($('<span data-color="" style="background-color:transparent;" class="' + cls + '"></span>')
+                        .attr('title', opts.noColorSelectedText)
+                    )
+                    .html()
+                );
             }
         }
         return "<div class='sp-cf " + className + "'>" + html.join('') + "</div>";
@@ -163,13 +163,7 @@
     }
 
     function instanceOptions(o, callbackContext) {
-        o.locale = o.locale || window.navigator.language;
-        if (o.locale) o.locale = o.locale.split('-')[0].toLowerCase(); // handle locale like "fr-FR"
-        if (o.locale != 'en' && $.spectrum.localization[o.locale]) {
-            o = $.extend({}, $.spectrum.localization[o.locale], o);
-        }
         var opts = $.extend({}, defaultOpts, o);
-
         opts.callbacks = {
             'move': bind(opts.move, callbackContext),
             'change': bind(opts.change, callbackContext),
@@ -184,8 +178,7 @@
     function spectrum(element, o) {
 
         var opts = instanceOptions(o, element),
-            type = opts.type,
-            flat = (type == 'flat'),
+            flat = opts.flat,
             showSelectionPalette = opts.showSelectionPalette,
             localStorageKey = opts.localStorageKey,
             theme = opts.theme,
@@ -211,7 +204,6 @@
             selectionPalette = opts.selectionPalette.slice(0),
             maxSelectionSize = opts.maxSelectionSize,
             draggingClass = "sp-dragging",
-            abortNextInputChange = false,
             shiftMovementDirection = null;
 
         var doc = element.ownerDocument,
@@ -236,7 +228,7 @@
             toggleButton = container.find(".sp-palette-toggle"),
             isInput = boundElement.is("input"),
             isInputTypeColor = isInput && boundElement.attr("type") === "color" && inputTypeColorSupport(),
-            shouldReplace = isInput && type == 'color',
+            shouldReplace = isInput && !flat,
             replacer = (shouldReplace) ? $(replaceInput).addClass(theme).addClass(opts.className).addClass(opts.replacerClassName) : $([]),
             offsetElement = (shouldReplace) ? replacer : boundElement,
             previewElement = replacer.find(".sp-preview-inner"),
@@ -245,26 +237,7 @@
             currentPreferredFormat = opts.preferredFormat,
             clickoutFiresChange = !opts.showButtons || opts.clickoutFiresChange,
             isEmpty = !initialColor,
-            allowEmpty = opts.allowEmpty;
-
-        // Element to be updated with the input color. Populated in initialize method
-        var originalInputContainer = null,
-            colorizeElement = null,
-            colorizeElementInitialColor = null,
-            colorizeElementInitialBackground = null;
-
-        //If there is a label for this element, when clicked on, show the colour picker
-        var thisId = boundElement.attr('id');
-        if(thisId !== undefined && thisId.length > 0) {
-            var label = $('label[for="'+thisId+'"]');
-            if(label.length) {
-                label.on('click', function(e){
-                    e.preventDefault();
-                    boundElement.spectrum('show');
-                    return false;
-                });
-            }
-        }
+            allowEmpty = opts.allowEmpty && !isInputTypeColor;
 
         function applyOptions() {
 
@@ -283,12 +256,6 @@
                         var rgb = tinycolor(paletteArray[i][j]).toRgbString();
                         paletteLookup[rgb] = true;
                     }
-                }
-
-                // if showPaletteOnly and didn't set initialcolor
-                // set initialcolor to first palette
-                if (opts.showPaletteOnly && !initialColor) {
-                    initialColor = (palette[0][0] === '') ? palette[0][0] : Object.keys(paletteLookup)[0];
                 }
             }
 
@@ -314,32 +281,9 @@
 
             applyOptions();
 
-            originalInputContainer = $('<span class="sp-original-input-container"></span>');
-            ['margin'].forEach(function(cssProp) {
-                originalInputContainer.css(cssProp, boundElement.css(cssProp));
-            });
-            // inline-flex by default, switching to flex if needed
-            if (boundElement.css('display') == 'block') originalInputContainer.css('display', 'flex');
-
             if (shouldReplace) {
                 boundElement.after(replacer).hide();
-            } else if (type == 'text') {
-                originalInputContainer.addClass('sp-colorize-container');
-                boundElement.addClass('spectrum sp-colorize').wrap(originalInputContainer);
-            } else if (type == 'component') {
-                boundElement.addClass('spectrum').wrap(originalInputContainer);
-                var addOn = $(["<div class='sp-colorize-container sp-add-on'>",
-                    "<div class='sp-colorize'></div> ",
-                "</div>"].join(''));
-                addOn.width(boundElement.outerHeight() + 'px')
-                     .css('border-radius', boundElement.css('border-radius'))
-                     .css('border', boundElement.css('border'));
-                boundElement.addClass('with-add-on').before(addOn);
             }
-
-            colorizeElement = boundElement.parent().find('.sp-colorize');
-            colorizeElementInitialColor = colorizeElement.css('color');
-            colorizeElementInitialBackground = colorizeElement.css('background-color');
 
             if (!allowEmpty) {
                 clearButton.hide();
@@ -362,7 +306,7 @@
 
             offsetElement.on("click.spectrum touchstart.spectrum", function (e) {
                 if (!disabled) {
-                    show();
+                    toggle();
                 }
 
                 e.stopPropagation();
@@ -380,16 +324,11 @@
             container.click(stopPropagation);
 
             // Handle user typed input
-            [textInput, boundElement].forEach(function(input) {
-                input.change(function() { setFromTextInput(input.val()); });
-                input.on("paste", function () {
-                    setTimeout(function() { setFromTextInput(input.val()); }, 1);
-                });
-                input.keydown(function (e) { if (e.keyCode == 13) {
-                    setFromTextInput($(input).val());
-                    if (input == boundElement) hide();
-                } });
+            textInput.change(setFromTextInput);
+            textInput.on("paste", function () {
+                setTimeout(setFromTextInput, 1);
             });
+            textInput.keydown(function (e) { if (e.keyCode == 13) { setFromTextInput(); } });
 
             cancelButton.text(opts.cancelText);
             cancelButton.on("click.spectrum", function (e) {
@@ -503,12 +442,11 @@
                 // In case color was black - update the preview UI and set the format
                 // since the set function will not run (default color is black).
                 updateUI();
-                currentPreferredFormat = tinycolor(initialColor).format || opts.preferredFormat;
+                currentPreferredFormat = opts.preferredFormat || tinycolor(initialColor).format;
+
                 addColorToSelectionPalette(initialColor);
-            } else if (initialColor === '') {
-                set(initialColor);
-                updateUI();
-            } else {
+            }
+            else {
                 updateUI();
             }
 
@@ -545,13 +483,13 @@
 
         function updateSelectionPaletteFromStorage() {
 
-            if (localStorageKey) {
+            if (localStorageKey && window.localStorage) {
+
                 // Migrate old palettes over to new format.  May want to remove this eventually.
                 try {
-                    var localStorage = window.localStorage;
-                    var oldPalette = localStorage[localStorageKey].split(",#");
+                    var oldPalette = window.localStorage[localStorageKey].split(",#");
                     if (oldPalette.length > 1) {
-                        delete localStorage[localStorageKey];
+                        delete window.localStorage[localStorageKey];
                         $.each(oldPalette, function(i, c) {
                              addColorToSelectionPalette(c);
                         });
@@ -576,7 +514,7 @@
                     }
                 }
 
-                if (localStorageKey) {
+                if (localStorageKey && window.localStorage) {
                     try {
                         window.localStorage[localStorageKey] = selectionPalette.join(";");
                     }
@@ -641,8 +579,10 @@
             boundElement.trigger('dragstop.spectrum', [ get() ]);
         }
 
-        function setFromTextInput(value) {
-            if (abortNextInputChange) { abortNextInputChange = false; return; }
+        function setFromTextInput() {
+
+            var value = textInput.val();
+
             if ((value === null || value === "") && allowEmpty) {
                 set(null);
                 move();
@@ -671,7 +611,6 @@
         }
 
         function show() {
-            // debugger;
             var event = $.Event('beforeShow.spectrum');
 
             if (visible) {
@@ -758,7 +697,7 @@
             }
 
             var newColor, newHsv;
-            if ((!color || color === undefined) && allowEmpty) {
+            if (!color && allowEmpty) {
                 isEmpty = true;
             } else {
                 isEmpty = false;
@@ -871,17 +810,6 @@
             if (opts.showInput) {
                 textInput.val(displayColor);
             }
-            boundElement.val(displayColor);
-            if (opts.type == "text" || opts.type == "component") {
-                var color = realColor;
-                if (color && colorizeElement) {
-                    var textColor = (color.isLight() || color.getAlpha() < 0.4) ? 'black' : 'white';
-                    colorizeElement.css('background-color', color.toRgbString()).css('color', textColor);
-                } else {
-                    colorizeElement.css('background-color', colorizeElementInitialBackground)
-                                   .css('color', colorizeElementInitialColor);
-                }
-            }
 
             if (opts.showPalette) {
                 drawPalette();
@@ -946,11 +874,12 @@
                 addColorToSelectionPalette(color);
             }
 
+            if (isInput) {
+                boundElement.val(displayColor);
+            }
+
             if (fireCallback && hasChanged) {
                 callbacks.change(color);
-                // we trigger the change event or input, but the input change event is also binded
-                // to some spectrum processing, that we do no need
-                abortNextInputChange = true;
                 boundElement.trigger('change', [ color ]);
             }
         }
@@ -987,18 +916,10 @@
         }
 
         function destroy() {
-            boundElement.show().removeClass('spectrum with-add-on sp-colorize');
+            boundElement.show();
             offsetElement.off("click.spectrum touchstart.spectrum");
             container.remove();
             replacer.remove();
-            if (colorizeElement) {
-                colorizeElement.css('background-color', colorizeElementInitialBackground)
-                               .css('color', colorizeElementInitialColor);
-            }
-            var originalInputContainer = boundElement.closest('.sp-original-input-container');
-            if (originalInputContainer.length > 0) {
-                originalInputContainer.after(boundElement).remove();
-            }
             spectrums[spect.id] = null;
         }
 
@@ -1276,12 +1197,6 @@
         // Initializing a new instance of spectrum
         return this.spectrum("destroy").each(function () {
             var options = $.extend({}, $(this).data(), opts);
-            // Infer default type from input params and deprecated options
-            if (!$(this).is('input')) options.type = 'noInput';
-            else if (options.flat || options.type == "flat") options.type = 'flat';
-            else if ($(this).attr('type') == 'color') options.type = 'color';
-            else options.type = options.type || 'component';
-
             var spect = spectrum(this, options);
             $(this).data(dataID, spect.id);
         });
@@ -1811,13 +1726,13 @@
 
             var hex = [
                 pad2(convertDecimalToHex(a)),
-            pad2(mathRound(r).toString(16)),
-            pad2(mathRound(g).toString(16)),
-            pad2(mathRound(b).toString(16))
-        ];
+                pad2(mathRound(r).toString(16)),
+                pad2(mathRound(g).toString(16)),
+                pad2(mathRound(b).toString(16))
+            ];
 
-        return hex.join("");
-    }
+            return hex.join("");
+        }
 
     // `equals`
     // Can be called with any tinycolor input
