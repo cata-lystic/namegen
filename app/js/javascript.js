@@ -57,7 +57,7 @@ wordDefaults = {
       localStorage.outline = this.outline
       localStorage.explodeWidth = this.explodeWidth
 
-      $("#generatedName").css({"font-family":this.font, "color" : this.fontColor})
+      $("#generatedName").css({"font-family":this.font, "color" : this.fontColor, "font-size" : localStorage.fontSize+"em"})
       if (this.outline == "shadow") {
         $("#generatedName").css({"text-shadow" : this.shadowH+"px "+this.shadowV+"px "+this.shadowBlur+"px "+this.outlineColor})
         $("#opTextShadowsInputs").slideDown()
@@ -202,7 +202,7 @@ $("document").ready(function() {
     $("#opBackgroundURL").val(localStorage.backgroundURL)
   }
   $("#opScreenshotTime").val(localStorage.screenshotTime)
-  $("#generatedName").css({"font-family":localStorage.font, "transform": "rotate("+localStorage.rotation+"deg)"})
+  $("#generatedName").css({"font-family":localStorage.font, "font-size" : localStorage.fontSize+"em", "transform": "rotate("+localStorage.rotation+"deg)"})
   textDecoration(localStorage.bold, localStorage.italic, localStorage.underline) // Decorate generated name
 
 
