@@ -60,7 +60,7 @@ wordDefaults = {
       if (getWidth() > 578) {
         localStorage.fontSize = this.fontSize
       } else {
-        round ( 15 / 2 , 1)
+        localStorage.fontSize = round ( this.fontSize / 2 , 1)
       }
 
       $("#generatedName").css({"font-family":this.font, "color" : this.fontColor, "font-size" : localStorage.fontSize+"em"})
@@ -77,7 +77,7 @@ wordDefaults = {
       $("#opShadowBlur").val(this.shadowBlur)
       $("#opFont").val(this.font)
       $("#opFontColor").spectrum({color: this.fontColor})
-      $("#opFontSize").val(this.fontSize)
+      $("#opFontSize").val(localStorage.fontSize)
       $("#opOutlineColor").spectrum({color: this.outlineColor})
       textDecoration(this.bold, this.italic, this.underline)
     }
@@ -930,7 +930,7 @@ $(document).on("click", ".takeScreenshot", function(e) {
     // Make sure user has acknowledged how mobile screenshots work
     if (localStorage.helpMobileScreenshot != "1") {
 
-      $("#notification").html("<div id='helpScreenshotNotif'><h1>Mobile Screenshots</h1><p>All buttons are going disappear for "+localStorage.screenshotTime+" seconds. This gives you time to use the screenshot feature on your phone (usually hold Home and Volume + VOL Down) to capture just the generated text.</p><p>You can change how long buttons dissapear in the Options.<br /><input id='helpScreenshotOK' type='button' value='Okay' /></p></div>").slideDown()
+      $("#notification").html("<div id='helpScreenshotNotif'><h1>Mobile Screenshots</h1><p>All buttons are going disappear for "+localStorage.screenshotTime+" seconds. This gives you time to use the screenshot feature on your phone (usually hold Home and Volume Down buttons) to capture just the generated text.</p><p>You can change how long buttons dissapear in the Options.<br /><br /><input id='helpScreenshotOK' type='button' value='Okay' /></p></div>").slideDown()
 
     } else {
 
