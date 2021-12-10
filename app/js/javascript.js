@@ -9,7 +9,7 @@ wordDefaults = {
   words: [ "Breezy\nDapper\nEdgy\nGutsy\nLucid\nPrecise\nTrusty\nCosmic", "Hedgehog\nFawn\nKoala\nLynx\nOcelot\nSalamander\nGorilla\nHippo" ],
   font: "Arial, Helvetica, Sans-Serif", // default font
   fontColor: "#000000",
-  fontSize: "4.0", // Font size is in EM units. 4.0 rem is default
+  fontSize: "5.0", // Font size is in EM units. 5.0 rem is default
   shadowH: "3",
   shadowV: "3",
   shadowBlur: "5",
@@ -49,13 +49,19 @@ wordDefaults = {
       localStorage.italic = this.italic
       localStorage.underline = this.underline
       localStorage.fontColor = this.fontColor
-      localStorage.fontSize = this.fontSize
       localStorage.shadowH = this.shadowH
       localStorage.shadowV = this.shadowV
       localStorage.shadowBlur = this.shadowBlur
       localStorage.outlineColor = this.outlineColor
       localStorage.outline = this.outline
       localStorage.explodeWidth = this.explodeWidth
+
+      // Cut default font size in half if mobile device detected
+      if (getWidth() > 578) {
+        localStorage.fontSize = this.fontSize
+      } else {
+        round ( 15 / 2 , 1)
+      }
 
       $("#generatedName").css({"font-family":this.font, "color" : this.fontColor, "font-size" : localStorage.fontSize+"em"})
       if (this.outline == "shadow") {
@@ -110,6 +116,8 @@ wordDefaults = {
   }
 
 }
+
+
 
 // Do this on startup
 $("document").ready(function() {
@@ -1019,6 +1027,12 @@ function getHeight() {
 // Check if string is a number
 function isNumber(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+// Round number
+function round(value, precision) {
+    var multiplier = Math.pow(10, precision || 0);
+    return Math.round(value * multiplier) / multiplier;
 }
 
 // Load image from file upload (having xss issues. may have to make a hidden image from url and then canvas copy it) and make a base64 hash of it. This will allow background to be loaded offline.
