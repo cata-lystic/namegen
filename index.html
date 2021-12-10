@@ -102,7 +102,7 @@
         <p><span class="d-none d-lg-inline">Background:</span><span class="d-inline d-lg-none">BG:</span> <input type="button" id="opBgUpload" value="Upload" /> URL: <input type="text" id="opBackgroundURL" value="background.jpg" style="width: 40%" /> <input type="button" id="opBackgroundChange" value="&check;" /> <input type="button" id="opBackgroundReset" value="&#x2717;" /></p>
         <input id="opBgUploadForm" type="file" onchange="encodeImageFileAsURL(this)" hidden />
 
-        <p>Buttons: <label><input id="opDark" type="radio" name="opButtonTheme" value="Dark" class="buttonTheme" /> Dark</label> <label><input id="opLight" type="radio" name="opButtonTheme" value="Light" class="buttonTheme" />  Light</label> <label><input type="checkbox" id="opButtonSmall" value="1" /> Small</label></p>
+        <p>Buttons: <label><input id="opDark" type="radio" name="opButtonTheme" value="Dark" class="buttonTheme" /> Dark</label> <label><input id="opLight" type="radio" name="opButtonTheme" value="Light" class="buttonTheme" />  Light</label></p>
 
         <p id="opMobileSS"><img src="app/img/phonew.png" class="phoneIcon" height="18" title="Mobile Only" /> Screenshot Time: <input id="opScreenshotTime" type="number" value="5" step="1" min="1" max="30" style="width: 45px" class="" /> seconds</p>
 
@@ -134,12 +134,10 @@
 
       </div>
 
-      <!-- Generate and Edit buttons -->
+      <!-- Generate button -->
       <div id="mainButtons">
 
-        <p class="text-center"><input type="button" id="generateMain" class="generate" value="Generate" /> <span id="takeScreenshotMain" class="takeScreenshot">&nbsp;<img class="cameraIcon" src="app/img/cameraw.png" />&nbsp;</span><input type="button" id="save" value="Save" class="editButtons" style="display: none" /> <input type="button" id="cancel" value="Cancel" class="editButtons" style="display: none" /> <input type="button" id="clear" value="Clear" class="editButtons" style="display: none" /> <input type="button" id="reset" value="Reset" class="editButtons" style="display: none" /></p>
-
-        <p id="takeScreenshotMobile" class="takeScreenshot">&nbsp;<img id="cameraIconMobile" src="app/img/camera.png" height="40px" /></p>
+        <p class="text-center"><input type="button" id="generateMain" class="generate" value="Generate" /><input type="button" id="save" value="Save" class="editButtons" style="display: none" /> <input type="button" id="cancel" value="Cancel" class="editButtons" style="display: none" /> <input type="button" id="clear" value="Clear" class="editButtons" style="display: none" /> <input type="button" id="reset" value="Reset" class="editButtons" style="display: none" /></p>
 
       </div>
 
@@ -147,7 +145,7 @@
 
     <!-- The Edit button is on the bottom left -->
     <div id="editFooter">
-      <input type="button" id="edit" class="editButtons" value="Edit" /> <input type="button" id="optionsButton" class="optionsButton editButtons" value="Options" /> <input type="button" id="screenshotsButton" class="ssButton editButtons" value="Screenshots" /> <input type="button" id="generateFooter" class="generate" value="Generate" style="display: none" /> <span id="takeScreenshotFooter" class="takeScreenshot" style="display: none"><img class="cameraIcon" src="app/img/cameraw.png" /></span>
+      <input type="button" id="edit" class="editButtons" value="Edit" /> <input type="button" id="optionsButton" class="optionsButton editButtons" value="Options" /> <input type="button" id="screenshotsButton" class="ssButton editButtons" value="Screenshots" /> <span id="takeScreenshot" class="takeScreenshot"><img class="cameraIcon" src="app/img/cameraw.png" /></span>
     </div>
 
     <!-- The main footer is on the bottom right -->

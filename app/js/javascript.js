@@ -178,12 +178,6 @@ $("document").ready(function() {
     $("#opLight").trigger("click")
   }
 
-  // SmalL Buttons options
-  if (localStorage.buttonSmall == "1") {
-      $("#opButtonSmall").prop({checked:true})
-      smallButtons(1)
-  }
-
   // Text Rotate/Skew/Position
   $("#opRotateX").val(localStorage.rotateX)
   $("#opRotateY").val(localStorage.rotateY)
@@ -306,7 +300,7 @@ $(document).on("click", "#edit", function(e) {
     $("#generatedName,#footer").slideUp() // Also hide the footer because it gets in the way when mobile keyboard is in use
     $("#editSection").slideDown()
     $("input.editButtons").show()
-    $("#generateMain, #edit, #takeScreenshotMain").hide()
+    $("#generateMain, #edit, #takeScreenshot").hide()
 
 })
 
@@ -347,7 +341,7 @@ $(document).on("click", "#save", function(e) {
   $("#editSection").slideUp()
   $("#generatedName,#footer").slideDown()
   $("input.editButtons").hide()
-  $("#generateMain, #edit, #optionsButton, #takeScreenshotMain, #screenshotsButton").show()
+  $("#generateMain, #edit, #optionsButton, #takeScreenshot, #screenshotsButton").show()
 
   // Generate a new word using the new lists
   generate()
@@ -374,7 +368,7 @@ $(document).on("click", "#cancel", function(e) {
   $("#editSection").slideUp()
   $("#generatedName,#footer").slideDown()
   $("input.editButtons").hide()
-  $("#generateMain, #edit, #optionsButton, #takeScreenshotMain, #screenshotsButton").show()
+  $("#generateMain, #edit, #optionsButton, #takeScreenshot, #screenshotsButton").show()
 
 })
 
@@ -736,7 +730,7 @@ $(document).on("click", ".buttonTheme", function(e) {
   localStorage.buttonTheme = theme
 
   // This is everything that should be themed
-  var themeThese = $(".generate, input.editButtons, #takeScreenshotMain, #takeScreenshotFooter, #helpScreenshotOK, #footer, #screenshots, #editInfo")
+  var themeThese = $(".generate, input.editButtons, #takeScreenshot, #helpScreenshotOK, #footer, #screenshots, #editInfo")
 
   if (theme == "Dark") {
 
@@ -756,34 +750,6 @@ $(document).on("click", ".buttonTheme", function(e) {
 
 })
 
-// Switch between Small and Large buttons
-function smallButtons(isSmall) {
-
-  if (isSmall == "1") {
-
-    $("#generateMain, #takeScreenshotMain").fadeOut()
-    $("#generateFooter, #takeScreenshotFooter").fadeIn()
-
-  } else {
-
-    $("#generateFooter, #takeScreenshotFooter").fadeOut()
-    $("#generateMain, #takeScreenshotMain").fadeIn()
-
-
-  }
-
-}
-
-// Toggle Small buttons
-$(document).on("change", "#opButtonSmall", function(e) {
-
-  var isSmall = ($(this).is(":checked")) ? "1" : "0"
-
-  smallButtons(isSmall)
-
-  localStorage.buttonSmall = isSmall
-
-})
 
 // Change Screenshot Timeout time (Mobile Only)
 $(document).on("change", "#opScreenshotTime", function(e) {
@@ -974,7 +940,7 @@ $(document).on("click", "#helpScreenshotOK", function(e) {
 
   localStorage.helpMobileScreenshot = "1"
   $("#notification").slideUp()
-  $("#takeScreenshotMobile").trigger("click") // take a screenshot now
+  $("#takeScreenshot").trigger("click") // take a screenshot now
 
 })
 

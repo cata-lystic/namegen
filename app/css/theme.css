@@ -149,9 +149,6 @@ canvas {
   #screenshotsButton {
     display: none !important;
   }
-  #takeScreenshotMain {
-    display: none !important;
-  }
 }
 
 /* Larger screens get smaller screenshots box */
@@ -165,9 +162,6 @@ canvas {
   }
   canvas {
     max-height: 150px;
-  }
-  #takeScreenshotMobile {
-    display: none !important;
   }
 
   /* Don't display mobile only Options to desktop users */
@@ -208,7 +202,7 @@ canvas {
 /*
 @media only screen and (min-width: 1024px) { #generatedName { font-size: 6rem; } } */
 
-.generate, input.editButtons, #optionsFooterButtons input, #clearData, #takeScreenshotMain, #takeScreenshotFooter, #helpScreenshotOK, .addRemove {
+.generate, input.editButtons, #optionsFooterButtons input, #clearData, #takeScreenshot, #helpScreenshotOK, .addRemove {
   margin-top: 5px;
   font-size: 1.6rem;
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
@@ -225,19 +219,11 @@ canvas {
   font-size: 1.5rem;
 }
 
-#takeScreenshotMain img {
-  max-height: 22px;
-}
-
-#takeScreenshotFooter {
+#takeScreenshot {
   font-size: 1.2rem !important;
 }
-#takeScreenshotFooter img {
+#takeScreenshot img {
   max-height: 14px;
-}
-
-#takeScreenshotMobile {
-  cursor: pointer;
 }
 
 .generate:hover, input.editButtons:hover, #optionsFooterButtons input:hover, #clearData:hover, helpScreenshotOK:hover, .addRemove:hover {
@@ -253,12 +239,12 @@ canvas {
 }
 
 
-input.lightTheme, #takeScreenshotMain.lightTheme, #takeScreenshotFooter.lightTheme, #screenshots.lightTheme, #footer.lightTheme {
+input.lightTheme, #takeScreenshot.lightTheme, #screenshots.lightTheme, #footer.lightTheme {
   background: rgba(255, 255, 255, 0.6);
   color: #000000 !important;
 
 }
-input.lightTheme:hover, #takeScreenshot.lightTheme:hover, #takeScreenshotFooter.lightTheme:hover, #screenshots.lightTheme:hover, #footer.lightTheme:hover {
+input.lightTheme:hover, #takeScreenshot.lightTheme:hover, #screenshots.lightTheme:hover, #footer.lightTheme:hover {
   background: rgba(255, 255, 255, 0.9) !important;
 }
 .lightTheme {
