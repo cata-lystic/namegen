@@ -205,7 +205,6 @@ $("document").ready(function() {
   $("#generatedName").css({"font-family":localStorage.font, "font-size" : localStorage.fontSize+"em", "transform": "rotate("+localStorage.rotation+"deg)"})
   textDecoration(localStorage.bold, localStorage.italic, localStorage.underline) // Decorate generated name
 
-
   // Give text a shadow if enabled and show inputs
   if (localStorage.outline == "shadow") {
     $("#generatedName").css({"text-shadow" : localStorage.shadowH+"px "+localStorage.shadowV+"px "+localStorage.shadowBlur+"px "+localStorage.outlineColor})
@@ -521,6 +520,18 @@ $(document).on("change", "#opFontColor", function(e) {
 
 })
 
+// Change outline color
+$(document).on("change", "#opOutlineColor", function(e) {
+
+  var outlineColor = $(this).val()
+  //$("#generatedName").css({"color": fontColor})
+
+  localStorage.outlineColor = outlineColor
+
+})
+
+
+
 // Change font size
 $(document).on("change", "#opFontSize", function(e) {
 
@@ -609,13 +620,13 @@ $(document).on("click, change", "input[name='opOutline']", function(e) {
 
 
 // Change text shadow and stroke
-$("#opTextShadows, #opTextExplode").on("change", "input", function(e) {
+$(document).on("change", "#opTextShadows, #opTextExplode", function(e) {
 
   // Grab the selected inputs. Check to make sure they're numbers later ;)
   var shadowH = parseInt($("#opShadowH").val())
   var shadowV = parseInt($("#opShadowV").val())
   var blur = parseInt($("#opShadowBlur").val())
-  var color = $("#opOutlineColor").val()
+  //var outlineColor = $("#opOutlineColor").val()
 
   var outline = $("input[name='opOutline']:checked").val()
 
@@ -642,7 +653,7 @@ $("#opTextShadows, #opTextExplode").on("change", "input", function(e) {
   localStorage.shadowH = shadowH
   localStorage.shadowV = shadowV
   localStorage.shadowBlur = blur
-  localStorage.outlineColor = color
+  //localStorage.outlineColor = outlineColor
   localStorage.outline = outline
   localStorage.explodeWidth = explodeWidth
 
