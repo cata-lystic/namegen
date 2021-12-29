@@ -10,9 +10,9 @@ wordDefaults = {
   font: "Arial, Helvetica, Sans-Serif", // default font
   fontColor: "#000000",
   fontSize: "5.0", // Font size is in EM units. 5.0 rem is default
-  shadowH: "3",
-  shadowV: "3",
-  shadowBlur: "5",
+  shadowH: "2",
+  shadowV: "2",
+  shadowBlur: "4",
   outlineColor: "#4d4d4d",
   shadowEnabled: "1",
   outline: "shadow", // "shadow" or "explode"
